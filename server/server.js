@@ -38,10 +38,6 @@ async function initDb() {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
-        -- Add missing reset columns if table was created previously
-        ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255);
-        ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expiry TIMESTAMP;
-
         CREATE TABLE IF NOT EXISTS bookings (
             id SERIAL PRIMARY KEY,
             user_email VARCHAR(100) REFERENCES users(email),
@@ -57,8 +53,9 @@ async function initDb() {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `);
-    console.log('Database tables and schema initialized successfully.');
+    console.log('Database tables initialized successfully.');
 }
+initDb().catch(console.error);
 
 // -------------------------------------------------------------------------
 // Auth Routes
@@ -237,4 +234,4 @@ app.get('/api/bookings/:email', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));commit
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

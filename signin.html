@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sign in or create a JK Enterprise account to access venue setups and rental bookings.">
-    <title>JK Enterprise - Sign In & Sign Up</title>
+    <meta name="description" content="Sign in or create an account with JK Enterprise for rentals and service bookings.">
+    <title>JK Enterprise - Sign In / Sign Up</title>
     <link rel="stylesheet" href="styles/index.css">
-    <link rel="stylesheet" href="styles/contact.css">
     <link rel="stylesheet" href="styles/auth.css">
 </head>
 <body>
@@ -22,101 +21,94 @@
                 <span class="bar"></span>
             </button>
             <ul class="nav-links" id="navLinks">
-                <!-- Signed-Out Only Navigation -->
-                <li class="logged-out-only"><a href="index.html">Home</a></li>
-                <li class="logged-out-only"><a href="signin.html" class="auth-btn active">Sign In</a></li>
-
-                <!-- Signed-In Only Navigation -->
-                <li class="logged-in-only"><a href="index.html">Home</a></li>
-                <li class="logged-in-only"><a href="about.html">About</a></li>
-                <li class="logged-in-only"><a href="services/services.html">Services</a></li>
-                <li class="logged-in-only"><a href="contact.html">Contact</a></li>
-                <li class="logged-in-only">
-                    <a href="profile.html" class="profile-nav-link" aria-label="User Profile">
-                        <div class="nav-avatar" id="headerAvatar">JD</div>
-                    </a>
-                </li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services/services.html">Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="signin.html" class="auth-btn active">Sign In</a></li>
             </ul>
         </nav>
     </header>
 
-    <main>
-        <section class="page-header">
-            <h1>Account Access</h1>
-            <p>Sign in to your existing account or create a new profile to manage bookings.</p>
-        </section>
+    <main class="auth-page">
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <button id="tabSignIn" class="tab-btn active" type="button">Sign In</button>
+                <button id="tabSignUp" class="tab-btn" type="button">Sign Up</button>
+            </div>
 
-        <section class="contact-container" style="grid-template-columns: 1fr;">
-            <div class="auth-card">
-                <!-- Toggle Tabs -->
-                <div class="auth-tabs">
-                    <button id="tabSignIn" class="auth-tab-btn active">Sign In</button>
-                    <button id="tabSignUp" class="auth-tab-btn">Sign Up</button>
+            <!-- Sign In Form -->
+            <form id="signInForm" class="auth-form active">
+                <h2>Welcome Back</h2>
+                <p class="form-subtitle">Sign in to manage your bookings and rental account.</p>
+
+                <div class="form-group">
+                    <label for="loginEmail">Email Address *</label>
+                    <input type="email" id="loginEmail" required placeholder="name@company.com">
                 </div>
 
-                <!-- Sign In Form -->
-                <form id="signInForm" class="auth-form active">
-                    <h2>Sign In</h2>
-                    <div class="form-group">
-                        <label for="loginEmail">Email Address *</label>
-                        <input type="email" id="loginEmail" required placeholder="john@example.com">
+                <div class="form-group">
+                    <label for="loginPassword">Password *</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                    <div style="text-align: right; margin-top: 0.35rem;">
+                        <a href="reset-password.html" style="font-size: 0.85rem; color: #555; text-decoration: underline;">Forgot Password?</a>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="loginPassword">Password *</label>
-                        <input type="password" id="loginPassword" required placeholder="••••••••">
-                    </div>
+                <button type="submit" class="auth-submit-btn">Sign In</button>
 
-                    <button type="submit" class="submit-btn" style="width: 100%;">Sign In</button>
-                    <p class="auth-toggle-prompt">Don't have a profile yet? <button type="button" id="switchToSignUp" class="inline-link-btn">Create a profile</button></p>
-                </form>
+                <p class="form-footer">
+                    Don't have an account yet? <button type="button" id="switchToSignUp" class="link-btn">Sign Up</button>
+                </p>
+            </form>
 
-                <!-- Updated Sign Up Form -->
-                <form id="signUpForm" class="auth-form">
-                    <h2>Create Profile</h2>
+            <!-- Sign Up Form -->
+            <form id="signUpForm" class="auth-form">
+                <h2>Create Account</h2>
+                <p class="form-subtitle">Register to streamline your rental and service bookings.</p>
 
-                    <!-- Account Type Selector -->
-                    <div class="form-group">
-                        <label for="accountType">Account Type *</label>
-                        <select id="accountType" required>
-                            <option value="individual" selected>Individual / Personal Use</option>
-                            <option value="business">Company / Business Client</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label for="accountType">Account Type *</label>
+                    <select id="accountType" required>
+                        <option value="individual">Individual / Personal Use</option>
+                        <option value="business">Company / Business Client</option>
+                    </select>
+                </div>
 
-                    <div class="form-group">
-                        <label for="regName">Full Name *</label>
-                        <input type="text" id="regName" required placeholder="John Doe">
-                    </div>
+                <div class="form-group" id="companyNameGroup" style="display: none;">
+                    <label for="regCompanyName">Company / Trading Name *</label>
+                    <input type="text" id="regCompanyName" placeholder="e.g. Acme Logistics Pty Ltd">
+                </div>
 
-                    <!-- Dynamic Company Field (shown only when Business is selected) -->
-                    <div class="form-group" id="companyNameGroup" style="display: none;">
-                        <label for="regCompanyName">Company / Trading Name *</label>
-                        <input type="text" id="regCompanyName" placeholder="e.g. Acme Events Pty Ltd">
-                    </div>
+                <div class="form-group">
+                    <label for="regName">Full Name *</label>
+                    <input type="text" id="regName" required placeholder="John Doe">
+                </div>
 
-                    <div class="form-group">
-                        <label for="regEmail">Email Address *</label>
-                        <input type="email" id="regEmail" required placeholder="john@example.com">
-                    </div>
+                <div class="form-group">
+                    <label for="regEmail">Email Address *</label>
+                    <input type="email" id="regEmail" required placeholder="name@company.com">
+                </div>
 
-                    <div class="form-group">
-                        <label for="regPhone">Mobile / Phone Number *</label>
-                        <input type="tel" id="regPhone" required placeholder="(012) 345-6789">
-                    </div>
+                <div class="form-group">
+                    <label for="regPhone">Phone / Mobile Number *</label>
+                    <input type="tel" id="regPhone" required placeholder="+27 82 123 4567">
+                </div>
 
-                    <div class="form-group">
-                        <label for="regPassword">Create Password *</label>
-                        <input type="password" id="regPassword" required placeholder="••••••••">
-                    </div>
+                <div class="form-group">
+                    <label for="regPassword">Password *</label>
+                    <input type="password" id="regPassword" required placeholder="Create password">
+                </div>
 
-                    <button type="submit" class="submit-btn" style="width: 100%;">Create Account & Proceed</button>
-                    <p class="auth-toggle-prompt">Already have an account? <button type="button" id="switchToSignIn" class="inline-link-btn">Sign In here</button></p>
-                </form>
+                <button type="submit" class="auth-submit-btn">Create Account & Proceed</button>
 
-                <p id="authFeedback" class="form-feedback"></p>
-            </div>
-        </section>
+                <p class="form-footer">
+                    Already have an account? <button type="button" id="switchToSignIn" class="link-btn">Sign In</button>
+                </p>
+            </form>
+
+            <p id="authFeedback" class="form-feedback"></p>
+        </div>
     </main>
 
     <footer>
