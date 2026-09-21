@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about JK Enterprise - our history, mission, values, and commitment to providing top-quality event setup and equipment rentals.">
+    <title>JK Enterprise - About Us</title>
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/about.css">
+    <link rel="stylesheet" href="styles/auth.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">JK Enterprise</a>
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <!-- Signed-Out Only Navigation -->
+                <li class="logged-out-only"><a href="index.html">Home</a></li>
+                <li class="logged-out-only"><a href="signin.html" class="auth-btn">Sign In</a></li>
+
+                <!-- Signed-In Only Navigation -->
+                <li class="logged-in-only"><a href="index.html">Home</a></li>
+                <li class="logged-in-only"><a href="about.html" class="active">About</a></li>
+                <li class="logged-in-only"><a href="services/services.html">Services</a></li>
+                <li class="logged-in-only"><a href="contact.html">Contact</a></li>
+                <li class="logged-in-only">
+                    <a href="profile.html" class="profile-nav-link" aria-label="User Profile">
+                        <div class="nav-avatar" id="headerAvatar">JD</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1>About JK Enterprise</h1>
+            <p>Your trusted partner for event setups, mobile sanitation, cold storage, and transport rentals.</p>
+        </section>
+
+        <!-- Company Overview -->
+        <section class="about-container">
+            <article class="about-card">
+                <h2>Who We Are</h2>
+                <p>JK Enterprise was founded with a clear objective: to offer dependable, high-quality event equipment and transport solutions under one roof. Whether hosting a private celebration or managing a large-scale project, we bring professional service and well-maintained equipment straight to your site.</p>
+            </article>
+
+            <!-- Core Values Grid -->
+            <div class="values-grid">
+                <div class="value-card">
+                    <h3>Reliability</h3>
+                    <p>We understand timing is critical. Our fleet and equipment are always prepared and delivered on schedule.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Hygiene & Quality</h3>
+                    <p>From our mobile cold rooms to our sanitation facilities, everything is cleaned, disinfected, and safety-checked before delivery.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Customer Focus</h3>
+                    <p>We tailor our setups and hire agreements to match your specific event size, transport requirements, and budget.</p>
+                </div>
+            </div>
+
+            <!-- Call to Action Banner -->
+            <div class="about-cta-card">
+                <h2>Ready to Work With Us?</h2>
+                <p>Contact our team today to discuss your event requirements or reserve transport equipment.</p>
+                <a href="contact.html" class="cta-btn">Get In Touch</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h4>JK Enterprise</h4>
+                <p>123 Business Street, Suite 100</p>
+                <p>Email: info@jkenterprise.com</p>
+                <p>Phone: (123) 456-7890</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 JK Enterprise. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/about.js"></script>
+</body>
+</html>

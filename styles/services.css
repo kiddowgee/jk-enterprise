@@ -1,0 +1,415 @@
+/* ==========================================
+   Reset & Base Styles
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    color: #222222;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+/* ==========================================
+   Header & Navigation
+   ========================================== */
+header {
+    background-color: #111111;
+    color: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+}
+
+.logo a {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #ffffff;
+}
+
+/* Mobile Toggle Button */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    gap: 4px;
+}
+
+.menu-toggle .bar {
+    width: 22px;
+    height: 2px;
+    background-color: #ffffff;
+}
+
+/* ==========================================
+   Page Header
+   ========================================== */
+.page-header {
+    background-color: #222222;
+    color: #ffffff;
+    text-align: center;
+    padding: 3.5rem 2rem;
+}
+
+.page-header h1 {
+    font-size: 2.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    color: #dddddd;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* ==========================================
+   Services Section & Animated Expandable Cards
+   ========================================== */
+.services-container {
+    max-width: 1100px;
+    margin: 3rem auto 5rem auto;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.service-card {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    padding: 2rem;
+    position: relative;
+}
+
+.pricing-tag {
+    display: inline-block;
+    background-color: #222222;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    margin-bottom: 0.75rem;
+}
+
+.service-summary h2 {
+    font-size: 1.5rem;
+    color: #111111;
+    margin-bottom: 0.75rem;
+}
+
+.service-summary p {
+    font-size: 1rem;
+    color: #555555;
+    margin-bottom: 1.25rem;
+}
+
+.toggle-details-btn {
+    background-color: transparent;
+    color: #111111;
+    border: 1px solid #111111;
+    padding: 0.5rem 1.25rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.toggle-details-btn:hover {
+    background-color: #111111;
+    color: #ffffff;
+}
+
+.toggle-details-btn .arrow {
+    display: inline-block;
+    transition: transform 0.4s ease;
+}
+
+/* Smooth Accordion Animation via Grid Template Rows */
+.service-details-drawer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drawer-content {
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.1s, padding-top 0.4s ease, margin-top 0.4s ease;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 1px solid transparent;
+}
+
+/* Active Expanded State */
+.service-card.expanded .service-details-drawer {
+    grid-template-rows: 1fr;
+}
+
+.service-card.expanded .drawer-content {
+    opacity: 1;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top-color: #eeeeee;
+}
+
+.service-card.expanded .toggle-details-btn .arrow {
+    transform: rotate(180deg);
+}
+
+.drawer-content h3 {
+    font-size: 1.2rem;
+    color: #111111;
+    margin: 1.25rem 0 0.75rem 0;
+}
+
+.drawer-content h3:first-child {
+    margin-top: 0;
+}
+
+/* Spec Cards Grid for Products/Vehicles */
+.item-specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.spec-card {
+    background-color: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    padding: 1.25rem;
+}
+
+.spec-card h4 {
+    font-size: 1rem;
+    color: #111111;
+    margin-bottom: 0.5rem;
+}
+
+.spec-card p {
+    font-size: 0.88rem;
+    color: #555555;
+    margin-bottom: 0.5rem;
+}
+
+.spec-card .price-text {
+    color: #111111;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+/* Verification Requirements Block */
+.verification-box {
+    background-color: #f0f0f0;
+    border-left: 4px solid #111111;
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.verification-box h3 {
+    margin-top: 0;
+}
+
+.service-features {
+    list-style-type: square;
+    padding-left: 1.25rem;
+    margin: 0.75rem 0;
+    color: #444444;
+}
+
+.service-features li {
+    margin-bottom: 0.4rem;
+}
+
+.service-cta {
+    display: inline-block;
+    background-color: #111111;
+    color: #ffffff;
+    padding: 0.65rem 1.5rem;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+.service-cta:hover {
+    background-color: #333333;
+}
+
+/* ==========================================
+   Footer
+   ========================================== */
+footer {
+    background-color: #111111;
+    color: #aaaaaa;
+    padding: 2.5rem 2rem 1.5rem 2rem;
+}
+
+.footer-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+.footer-info h4 {
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-copyright {
+    border-top: 1px solid #333333;
+    padding-top: 1.25rem;
+    font-size: 0.85rem;
+}
+
+/* ==========================================
+   Responsive Mobile Styling
+   ========================================== */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #111111;
+        padding: 1.5rem 2rem;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .service-card {
+        padding: 1.5rem;
+    }
+}
+
+/* ==========================================
+   Profile Navigation Avatar Button
+   ========================================== */
+.profile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 0;
+}
+
+.nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #111111;
+    font-weight: bold;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.profile-nav-link:hover .nav-avatar,
+.profile-nav-link.active .nav-avatar {
+    border-color: #cccccc;
+    transform: scale(1.05);
+}
+
+/* If using an actual <img> tag instead of initials */
+.nav-avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.profile-nav-link:hover .nav-avatar-img {
+    border-color: #cccccc;
+    transform: scale(1.05);
+}
+
+/* ==========================================
+   Navigation Visibility States
+   ========================================== */
+
+/* Hide logged-in items by default when NOT logged in */
+body:not(.user-logged-in) .logged-in-only,
+html:not(.user-logged-in) .logged-in-only {
+    display: none !important;
+}
+
+/* Hide logged-out items when logged in */
+body.user-logged-in .logged-out-only,
+html.user-logged-in .logged-out-only {
+    display: none !important;
+}

@@ -1,0 +1,372 @@
+/* ==========================================
+   Reset & Base Styles
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    color: #222222;
+    background-color: #f4f4f4; /* Subtle smoke grey background */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+/* ==========================================
+   Header & Navigation
+   ========================================== */
+header {
+    background-color: #111111; /* Clean solid black header */
+    color: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+}
+
+.logo a {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    color: #cccccc; /* Soft smoke grey links */
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #ffffff;
+}
+
+/* Mobile Toggle Button */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    gap: 4px;
+}
+
+.menu-toggle .bar {
+    width: 22px;
+    height: 2px;
+    background-color: #ffffff;
+}
+
+/* ==========================================
+   Hero Section
+   ========================================== */
+.hero {
+    background-color: #222222;
+    color: #ffffff;
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.1rem;
+    color: #dddddd;
+    margin-bottom: 2rem;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #ffffff;
+    color: #111111;
+    padding: 0.75rem 1.75rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.cta-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* ==========================================
+   About & Highlights Sections
+   ========================================== */
+.about-summary {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.about-summary h2,
+.highlights h2 {
+    font-size: 2rem;
+    color: #111111;
+    margin-bottom: 1rem;
+}
+
+.about-summary p {
+    font-size: 1.05rem;
+    color: #555555;
+}
+
+.highlights {
+    max-width: 1100px;
+    margin: 0 auto 4rem auto;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.highlight-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 4px;
+    border: 1px solid #dddddd;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card h3 {
+    font-size: 1.25rem;
+    color: #111111;
+    margin-bottom: 0.75rem;
+}
+
+.card p {
+    color: #666666;
+    margin-bottom: 1.5rem;
+}
+
+.card-link {
+    color: #111111;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.card-link:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================
+   Footer
+   ========================================== */
+footer {
+    background-color: #111111;
+    color: #aaaaaa;
+    padding: 2.5rem 2rem 1.5rem 2rem;
+}
+
+.footer-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+.footer-info h4 {
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-copyright {
+    border-top: 1px solid #333333;
+    padding-top: 1.25rem;
+    font-size: 0.85rem;
+}
+
+/* ==========================================
+   Responsive Mobile Styling
+   ========================================== */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #111111;
+        padding: 1.5rem 2rem;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+}
+
+/* ==========================================
+   Profile Navigation Avatar Button
+   ========================================== */
+.profile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 0;
+}
+
+.nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #111111;
+    font-weight: bold;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.profile-nav-link:hover .nav-avatar,
+.profile-nav-link.active .nav-avatar {
+    border-color: #cccccc;
+    transform: scale(1.05);
+}
+
+/* If using an actual <img> tag instead of initials */
+.nav-avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.profile-nav-link:hover .nav-avatar-img {
+    border-color: #cccccc;
+    transform: scale(1.05);
+}
+
+/* ==========================================
+   Authentication State Navigation Visibility
+   ========================================== */
+
+/* Hide logged-in items by default */
+body:not(.user-logged-in) .logged-in-only {
+    display: none !important;
+}
+
+/* Hide logged-out items when logged in */
+body.user-logged-in .logged-out-only {
+    display: none !important;
+}
+
+/* Modal Popup Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-card {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 4px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.modal-card h3 {
+    font-size: 1.4rem;
+    color: #111111;
+    margin-bottom: 0.75rem;
+}
+
+.modal-card p {
+    font-size: 0.95rem;
+    color: #555555;
+    margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.modal-btn {
+    padding: 0.6rem 1.25rem;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    font-size: 0.9rem;
+}
+
+.modal-btn.cancel {
+    background-color: #e0e0e0;
+    color: #333333;
+}
+
+.modal-btn.confirm {
+    background-color: #111111;
+    color: #ffffff;
+}

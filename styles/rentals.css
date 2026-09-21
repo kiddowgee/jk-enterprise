@@ -1,0 +1,250 @@
+/* ==========================================
+   Rental Item Cards & Selection
+   ========================================== */
+.rental-selection-container {
+    max-width: 900px;
+    margin: 3rem auto 5rem auto;
+    padding: 0 2rem;
+}
+
+.rental-selection-container h2 {
+    font-size: 1.5rem;
+    color: #111111;
+    margin-bottom: 1.5rem;
+}
+
+.rental-item-card {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.item-info h3 {
+    font-size: 1.15rem;
+    color: #111111;
+    margin-bottom: 0.25rem;
+}
+
+.item-info p {
+    font-size: 0.9rem;
+    color: #666666;
+    margin-bottom: 0.5rem;
+}
+
+.item-price {
+    font-weight: bold;
+    color: #111111;
+    font-size: 0.95rem;
+}
+
+/* Custom + / - Quantity Controls */
+.qty-picker {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 100px;
+    justify-content: flex-end;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #111111;
+    background-color: #ffffff;
+    color: #111111;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, opacity 0.2s ease, visibility 0.2s ease;
+    user-select: none;
+}
+
+.qty-btn:hover {
+    background-color: #111111;
+    color: #ffffff;
+}
+
+.qty-btn.btn-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.qty-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+    min-width: 24px;
+    text-align: center;
+}
+
+.rental-duration-box {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rental-duration-box label {
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.rental-duration-box input {
+    width: 80px;
+    padding: 0.5rem;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* Bottom Total Bar */
+.total-bar {
+    background-color: #111111;
+    color: #ffffff;
+    padding: 1.5rem 2rem;
+    border-radius: 4px;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-bar h3 {
+    font-size: 1.25rem;
+}
+
+/* Confirmation Summary Box */
+.summary-box {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eeeeee;
+    font-size: 0.95rem;
+}
+
+.delivery-calc-box {
+    background-color: #f0f0f0;
+    padding: 1.25rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.final-total-box {
+    border-top: 2px solid #111111;
+    padding-top: 1rem;
+    margin-top: 1.5rem;
+}
+
+.total-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.35rem 0;
+    font-size: 1rem;
+}
+
+.total-line.grand-total {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #111111;
+    border-top: 1px solid #dddddd;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+}
+
+@media (max-width: 600px) {
+    .rental-item-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .total-bar {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+/* ==========================================
+   Profile Navigation Avatar Button
+   ========================================== */
+.profile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 0;
+}
+
+.nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #111111;
+    font-weight: bold;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.profile-nav-link:hover .nav-avatar,
+.profile-nav-link.active .nav-avatar {
+    border-color: #cccccc;
+    transform: scale(1.05);
+}
+
+/* If using an actual <img> tag instead of initials */
+.nav-avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.profile-nav-link:hover .nav-avatar-img {
+    border-color: #cccccc;
+    transform: scale(1.05);
+}
+
+/* ==========================================
+   Navigation Visibility States
+   ========================================== */
+
+/* Hide logged-in items by default when NOT logged in */
+body:not(.user-logged-in) .logged-in-only,
+html:not(.user-logged-in) .logged-in-only {
+    display: none !important;
+}
+
+/* Hide logged-out items when logged in */
+body.user-logged-in .logged-out-only,
+html.user-logged-in .logged-out-only {
+    display: none !important;
+}

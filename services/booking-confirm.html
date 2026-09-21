@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Confirm your booking details, delivery options, and final total with JK Enterprise.">
+    <title>JK Enterprise - Confirm Booking</title>
+    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/contact.css">
+    <link rel="stylesheet" href="../styles/rentals.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="../index.html">JK Enterprise</a>
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li class="logged-out-only"><a href="../index.html">Home</a></li>
+                <li class="logged-out-only"><a href="../signin.html" class="auth-btn">Sign In</a></li>
+
+                <li class="logged-in-only"><a href="../index.html">Home</a></li>
+                <li class="logged-in-only"><a href="../about.html">About</a></li>
+                <li class="logged-in-only"><a href="services.html">Services</a></li>
+                <li class="logged-in-only"><a href="../contact.html">Contact</a></li>
+                <li class="logged-in-only">
+                    <a href="../profile.html" class="profile-nav-link" aria-label="User Profile">
+                        <div class="nav-avatar" id="headerAvatar">JD</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <h1>Booking Confirmation</h1>
+            <p>Review your selected items, confirm your contact details, and choose fulfillment options.</p>
+        </section>
+
+        <section class="contact-container" style="grid-template-columns: 1fr;">
+            <div class="contact-form-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
+                
+                <h2>1. Selected Rental Items</h2>
+                <div id="selectedItemsSummary" class="summary-box">
+                    <!-- Dynamic summary loaded via JS -->
+                </div>
+
+                <form id="checkoutForm">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                        <h2 style="margin: 0;">2. Customer Information</h2>
+                        <button type="button" id="autofillProfileBtn" class="action-btn edit-btn" style="font-size: 0.8rem; padding: 0.3rem 0.75rem;">Reset to Profile Details</button>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="custName">Full Name *</label>
+                        <input type="text" id="custName" required placeholder="John Doe">
+                    </div>
+
+                    <div class="form-group" id="companyFieldGroup" style="display: none;">
+                        <label for="custCompany">Company Name</label>
+                        <input type="text" id="custCompany" placeholder="e.g. Acme Events Pty Ltd">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="custEmail">Email Address *</label>
+                        <input type="email" id="custEmail" required placeholder="john@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="custPhone">Phone Number *</label>
+                        <input type="tel" id="custPhone" required placeholder="(012) 345-6789">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="startDate">Start Date *</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+
+                    <h2>3. Fulfillment Option</h2>
+                    <div class="form-group">
+                        <label for="fulfillmentType">Collection / Delivery *</label>
+                        <select id="fulfillmentType" required>
+                            <option value="self-collect">Self Collection (Free)</option>
+                            <option value="delivery">Delivery Service</option>
+                        </select>
+                    </div>
+
+                    <!-- Flat Delivery Zone Selector -->
+                    <div id="deliveryFields" style="display: none;" class="delivery-calc-box">
+                        <div class="form-group">
+                            <label for="deliveryZone">Delivery Zone / Region *</label>
+                            <select id="deliveryZone">
+                                <option value="pretoria" data-fee="100">Pretoria (Local Delivery - R100)</option>
+                                <option value="gauteng-other" data-fee="300">Other Gauteng Areas (R300)</option>
+                                <option value="out-of-radius" data-fee="0">Outside Gauteng (Out of Radius - Collection Only)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="deliveryAddress">Delivery Physical Address *</label>
+                            <textarea id="deliveryAddress" rows="2" placeholder="Enter full venue or street address in Pretoria/Gauteng..."></textarea>
+                        </div>
+
+                        <!-- Out of radius warning notice -->
+                        <div id="outOfRadiusNotice" style="display: none; background-color: #ffebee; border: 1px solid #ef5350; color: #c62828; padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.88rem; margin-top: 0.5rem;">
+                            <strong>Delivery Unavailable:</strong> Delivery is strictly limited to Gauteng. Clients outside this radius may only use <strong>Self Collection</strong>
+                            method
+                        </div>
+                    </div>
+
+                    <!-- Final Totals -->
+                    <div class="final-total-box">
+                        <div class="total-line"><span>Items Subtotal:</span> <span id="summarySubtotal">R0</span></div>
+                        <div class="total-line"><span>Fulfillment / Delivery Fee:</span> <span id="summaryFulfillmentFee">R0</span></div>
+                        <div class="total-line grand-total"><span>Grand Total:</span> <span id="summaryGrandTotal">R0</span></div>
+                    </div>
+
+                    <button type="submit" id="checkoutSubmitBtn" class="submit-btn" style="width: 100%; margin-top: 1.5rem;">Checkout & Confirm Booking</button>
+                    <p id="checkoutFeedback" class="form-feedback"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h4>JK Enterprise</h4>
+                <p>123 Business Street, Suite 100</p>
+                <p>Email: info@jkenterprise.com</p>
+                <p>Phone: (123) 456-7890</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 JK Enterprise. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/booking-confirm.js"></script>
+</body>
+</html>

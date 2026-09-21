@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in or create a JK Enterprise account to access venue setups and rental bookings.">
+    <title>JK Enterprise - Sign In & Sign Up</title>
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/contact.css">
+    <link rel="stylesheet" href="styles/auth.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">JK Enterprise</a>
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <!-- Signed-Out Only Navigation -->
+                <li class="logged-out-only"><a href="index.html">Home</a></li>
+                <li class="logged-out-only"><a href="signin.html" class="auth-btn active">Sign In</a></li>
+
+                <!-- Signed-In Only Navigation -->
+                <li class="logged-in-only"><a href="index.html">Home</a></li>
+                <li class="logged-in-only"><a href="about.html">About</a></li>
+                <li class="logged-in-only"><a href="services/services.html">Services</a></li>
+                <li class="logged-in-only"><a href="contact.html">Contact</a></li>
+                <li class="logged-in-only">
+                    <a href="profile.html" class="profile-nav-link" aria-label="User Profile">
+                        <div class="nav-avatar" id="headerAvatar">JD</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <h1>Account Access</h1>
+            <p>Sign in to your existing account or create a new profile to manage bookings.</p>
+        </section>
+
+        <section class="contact-container" style="grid-template-columns: 1fr;">
+            <div class="auth-card">
+                <!-- Toggle Tabs -->
+                <div class="auth-tabs">
+                    <button id="tabSignIn" class="auth-tab-btn active">Sign In</button>
+                    <button id="tabSignUp" class="auth-tab-btn">Sign Up</button>
+                </div>
+
+                <!-- Sign In Form -->
+                <form id="signInForm" class="auth-form active">
+                    <h2>Sign In</h2>
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address *</label>
+                        <input type="email" id="loginEmail" required placeholder="john@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password *</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••">
+                    </div>
+
+                    <button type="submit" class="submit-btn" style="width: 100%;">Sign In</button>
+                    <p class="auth-toggle-prompt">Don't have a profile yet? <button type="button" id="switchToSignUp" class="inline-link-btn">Create a profile</button></p>
+                </form>
+
+                <!-- Updated Sign Up Form -->
+                <form id="signUpForm" class="auth-form">
+                    <h2>Create Profile</h2>
+
+                    <!-- Account Type Selector -->
+                    <div class="form-group">
+                        <label for="accountType">Account Type *</label>
+                        <select id="accountType" required>
+                            <option value="individual" selected>Individual / Personal Use</option>
+                            <option value="business">Company / Business Client</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regName">Full Name *</label>
+                        <input type="text" id="regName" required placeholder="John Doe">
+                    </div>
+
+                    <!-- Dynamic Company Field (shown only when Business is selected) -->
+                    <div class="form-group" id="companyNameGroup" style="display: none;">
+                        <label for="regCompanyName">Company / Trading Name *</label>
+                        <input type="text" id="regCompanyName" placeholder="e.g. Acme Events Pty Ltd">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regEmail">Email Address *</label>
+                        <input type="email" id="regEmail" required placeholder="john@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPhone">Mobile / Phone Number *</label>
+                        <input type="tel" id="regPhone" required placeholder="(012) 345-6789">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPassword">Create Password *</label>
+                        <input type="password" id="regPassword" required placeholder="••••••••">
+                    </div>
+
+                    <button type="submit" class="submit-btn" style="width: 100%;">Create Account & Proceed</button>
+                    <p class="auth-toggle-prompt">Already have an account? <button type="button" id="switchToSignIn" class="inline-link-btn">Sign In here</button></p>
+                </form>
+
+                <p id="authFeedback" class="form-feedback"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h4>JK Enterprise</h4>
+                <p>123 Business Street, Suite 100</p>
+                <p>Email: info@jkenterprise.com</p>
+                <p>Phone: (123) 456-7890</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 JK Enterprise. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/auth.js"></script>
+</body>
+</html>

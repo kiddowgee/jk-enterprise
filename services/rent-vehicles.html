@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Select bakkies and trailers to hire from JK Enterprise.">
+    <title>JK Enterprise - Bakkie & Trailer Rentals</title>
+    <link rel="stylesheet" href="../styles/contact.css">
+    <link rel="stylesheet" href="../styles/rentals.css">
+    <link rel="stylesheet" href="../styles/index.css">
+    
+</head>
+<body>
+
+   <header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="../index.html">JK Enterprise</a>
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <!-- Signed-Out Only Navigation -->
+            <li class="logged-out-only"><a href="../index.html">Home</a></li>
+            <li class="logged-out-only"><a href="../signin.html" class="auth-btn">Sign In</a></li>
+
+            <!-- Signed-In Only Navigation -->
+            <li class="logged-in-only"><a href="../index.html">Home</a></li>
+            <li class="logged-in-only"><a href="../about.html">About</a></li>
+            <li class="logged-in-only"><a href="services.html">Services</a></li>
+            <li class="logged-in-only"><a href="../contact.html">Contact</a></li>
+            <li class="logged-in-only">
+                <a href="../profile.html" class="profile-nav-link" aria-label="User Profile">
+                    <div class="nav-avatar" id="headerAvatar">JD</div>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+    <main>
+        <section class="page-header">
+            <h1>Bakkie & Trailer Rentals</h1>
+            <p>Select vehicles or trailers, choose quantities, and proceed to booking.</p>
+        </section>
+
+        <section class="rental-selection-container">
+            <form id="vehicleRentalForm">
+                <h2>1. Select Vehicles / Trailers</h2>
+                
+                <div class="rental-item-card">
+                    <div class="item-info">
+                        <h3>1-Ton Single Cab Bakkie</h3>
+                        <p>Manual transmission, diesel, tie-down rails, 1,000kg payload capacity.</p>
+                        <span class="item-price">R500 base/day (+ distance on checkout)</span>
+                    </div>
+                    <div class="qty-picker">
+                        <button type="button" class="qty-btn qty-minus btn-hidden" aria-label="Decrease quantity">&minus;</button>
+                        <span class="qty-value">0</span>
+                        <button type="button" class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
+                        <input type="hidden" data-name="1-Ton Single Cab Bakkie" data-price="500" value="0" class="item-qty">
+                    </div>
+                </div>
+
+                <div class="rental-item-card">
+                    <div class="item-info">
+                        <h3>Open Utility Trailer (2.5m)</h3>
+                        <p>Single-axle, high mesh sides, removable tailboard, 750kg GVM.</p>
+                        <span class="item-price">R250 base/day (+ distance on checkout)</span>
+                    </div>
+                    <div class="qty-picker">
+                        <button type="button" class="qty-btn qty-minus btn-hidden" aria-label="Decrease quantity">&minus;</button>
+                        <span class="qty-value">0</span>
+                        <button type="button" class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
+                        <input type="hidden" data-name="Open Utility Trailer (2.5m)" data-price="250" value="0" class="item-qty">
+                    </div>
+                </div>
+
+                <div class="rental-item-card">
+                    <div class="item-info">
+                        <h3>Enclosed Luggage Trailer</h3>
+                        <p>Weatherproof box trailer, rear locking doors, dual-axle stability.</p>
+                        <span class="item-price">R350 base/day (+ distance on checkout)</span>
+                    </div>
+                    <div class="qty-picker">
+                        <button type="button" class="qty-btn qty-minus btn-hidden" aria-label="Decrease quantity">&minus;</button>
+                        <span class="qty-value">0</span>
+                        <button type="button" class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
+                        <input type="hidden" data-name="Enclosed Luggage Trailer" data-price="350" value="0" class="item-qty">
+                    </div>
+                </div>
+
+                <div class="rental-duration-box">
+                    <label>Number of Rental Days:</label>
+                    <div class="qty-picker days-picker">
+                        <button type="button" class="qty-btn days-minus btn-hidden" aria-label="Decrease days">&minus;</button>
+                        <span class="days-value">1</span>
+                        <button type="button" class="qty-btn days-plus" aria-label="Increase days">+</button>
+                        <input type="hidden" id="rentalDays" value="1">
+                    </div>
+                </div>
+
+                <div class="verification-box">
+                    <h3>Driver Verification Notice</h3>
+                    <p>Driver's license, ID, proof of residence, and deposit required at checkout.</p>
+                </div>
+
+                <div class="total-bar">
+                    <h3>Estimated Base Total: <span id="itemsSubtotal">R0</span></h3>
+                    <button type="submit" class="submit-btn">Continue to Confirmation &rarr;</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h4>JK Enterprise</h4>
+                <p>123 Business Street, Suite 100</p>
+                <p>Email: info@jkenterprise.com</p>
+                <p>Phone: (123) 456-7890</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 JK Enterprise. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../scripts/rentals.js"></script>
+    <script src="../scripts/auth.js"></script>
+</body>
+</html>

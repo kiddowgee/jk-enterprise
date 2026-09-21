@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage your JK Enterprise account details, view rental history, and upload verification documents.">
+    <title>JK Enterprise - Customer Profile</title>
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/contact.css">
+    <link rel="stylesheet" href="styles/profile.css">
+    <link rel="stylesheet" href="styles/auth.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">JK Enterprise</a>
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <!-- Signed-Out Only Navigation -->
+                <li class="logged-out-only"><a href="index.html">Home</a></li>
+                <li class="logged-out-only"><a href="signin.html" class="auth-btn">Sign In</a></li>
+
+                <!-- Signed-In Only Navigation -->
+                <li class="logged-in-only"><a href="index.html">Home</a></li>
+                <li class="logged-in-only"><a href="about.html">About</a></li>
+                <li class="logged-in-only"><a href="services/services.html">Services</a></li>
+                <li class="logged-in-only"><a href="contact.html">Contact</a></li>
+                <li class="logged-in-only">
+                    <a href="profile.html" class="profile-nav-link active" aria-label="User Profile">
+                        <div class="nav-avatar" id="headerAvatar">JD</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <h1>Customer Account Profile</h1>
+            <p>Manage your account, track bookings, and keep your driver verification documents up to date.</p>
+        </section>
+
+        <section class="profile-container">
+            <!-- Sidebar Navigation -->
+            <aside class="profile-sidebar">
+                <div class="user-avatar">
+                    <div class="avatar-circle" id="avatarInitials">JD</div>
+                    <h3 id="sidebarName">John Doe</h3>
+                    <p id="sidebarEmail">john@example.com</p>
+                    <span id="sidebarAccountBadge" class="account-badge">Individual</span>
+                </div>
+                <ul class="profile-menu">
+                    <li><button class="tab-btn active" data-tab="details-tab">Personal Information</button></li>
+                    <li><button class="tab-btn" data-tab="verification-tab">Verification Documents</button></li>
+                    <li><button class="tab-btn" data-tab="history-tab">Rental History</button></li>
+                </ul>
+
+                <!-- Primary Sign Out Button -->
+                <div class="sidebar-footer">
+                    <button id="sidebarSignOutBtn" class="signout-btn">Sign Out</button>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="profile-content">
+                
+                <!-- Tab 1: Personal Details -->
+                <div class="tab-pane active" id="details-tab">
+                    <div class="tab-header-flex">
+                        <h2>Personal Information</h2>
+                        <button type="button" id="editProfileBtn" class="action-btn edit-btn">Edit Details</button>
+                    </div>
+
+                    <form id="profileDetailsForm" class="view-mode">
+                        <div class="form-group">
+                            <label for="profileAccountType">Account Type</label>
+                            <input type="text" id="profileAccountType" readonly class="readonly-input">
+                        </div>
+
+                        <div class="form-group" id="profileCompanyGroup" style="display: none;">
+                            <label for="profileCompanyName">Company / Trading Name</label>
+                            <input type="text" id="profileCompanyName" readonly class="editable-field">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profileFullName">Full Name *</label>
+                            <input type="text" id="profileFullName" required readonly class="editable-field">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profileEmail">Email Address *</label>
+                            <input type="email" id="profileEmail" required readonly class="editable-field">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profilePhone">Phone / Mobile Number *</label>
+                            <input type="tel" id="profilePhone" required readonly class="editable-field">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profileAddress">Primary Physical Address</label>
+                            <textarea id="profileAddress" rows="3" readonly class="editable-field" placeholder="Enter your delivery or physical address..."></textarea>
+                        </div>
+
+                        <!-- Action Controls (Hidden until Edit is clicked) -->
+                        <div id="formActionButtons" class="form-action-group" style="display: none;">
+                            <button type="button" id="discardChangesBtn" class="action-btn cancel-btn">Discard Changes</button>
+                            <button type="submit" id="saveChangesBtn" class="action-btn save-btn">Save Changes</button>
+                        </div>
+
+                        <p id="detailsFeedback" class="form-feedback"></p>
+                    </form>
+                </div>
+
+                <!-- Tab 2: Driver Verification Uploads -->
+                <div class="tab-pane" id="verification-tab">
+                    <h2>Vehicle & Trailer Rental Verification</h2>
+                    <p class="tab-description">Upload your documents once to expedite vehicle handovers.</p>
+                    <form id="verificationForm">
+                        <div class="form-group">
+                            <label for="licenseDoc">Driver's License (Code B or EB) *</label>
+                            <input type="file" id="licenseDoc" accept=".pdf,.png,.jpg,.jpeg">
+                        </div>
+                        <div class="form-group">
+                            <label for="idDoc">Identity Document / Passport *</label>
+                            <input type="file" id="idDoc" accept=".pdf,.png,.jpg,.jpeg">
+                        </div>
+                        <button type="submit" class="submit-btn">Upload Documents</button>
+                        <p id="verificationFeedback" class="form-feedback"></p>
+                    </form>
+                </div>
+
+                <!-- Tab 3: Rental History -->
+                <div class="tab-pane" id="history-tab">
+                    <h2>Recent Bookings & Requests</h2>
+                    <div class="history-list">
+                        <div class="history-card">
+                            <span class="booking-id">Booking #JK-8492</span>
+                            <p>1-Ton Single Cab Bakkie - Active Rental</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h4>JK Enterprise</h4>
+                <p>123 Business Street, Suite 100</p>
+                <p>Email: info@jkenterprise.com</p>
+                <p>Phone: (123) 456-7890</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 JK Enterprise. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/profile.js"></script>
+</body>
+</html>

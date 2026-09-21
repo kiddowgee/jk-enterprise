@@ -1,0 +1,291 @@
+/* ==========================================
+   Customer Profile Layout & Styling
+   ========================================== */
+
+.profile-container {
+    max-width: 1000px;
+    margin: 2.5rem auto 5rem auto;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+}
+
+/* Sidebar Box */
+.profile-sidebar {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 1.75rem 1.25rem;
+    height: fit-content;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.user-avatar {
+    text-align: center;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #eeeeee;
+    margin-bottom: 1.25rem;
+}
+
+.avatar-circle {
+    width: 68px;
+    height: 68px;
+    background-color: #111111;
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem auto;
+}
+
+.user-avatar h3 {
+    font-size: 1.1rem;
+    color: #111111;
+    margin-bottom: 0.2rem;
+}
+
+.user-avatar p {
+    font-size: 0.85rem;
+    color: #666666;
+    margin-bottom: 0.5rem;
+}
+
+.account-badge {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    background-color: #f0f0f0;
+    color: #444444;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.profile-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0;
+    margin: 0;
+}
+
+.tab-btn {
+    width: 100%;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #444444;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.tab-btn:hover {
+    background-color: #f5f5f5;
+    color: #111111;
+}
+
+.tab-btn.active {
+    background-color: #111111;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Sidebar Footer (Sign Out) */
+.sidebar-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eeeeee;
+}
+
+.signout-btn {
+    width: 100%;
+    background-color: transparent;
+    color: #111111;
+    border: 1px solid #111111;
+    padding: 0.6rem 1rem;
+    font-weight: bold;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.signout-btn:hover {
+    background-color: #111111;
+    color: #ffffff;
+}
+
+/* Main Content Panel */
+.profile-content {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Tab Header Flex Box */
+.tab-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.tab-header-flex h2 {
+    font-size: 1.35rem;
+    color: #111111;
+    margin: 0;
+}
+
+.tab-description {
+    font-size: 0.9rem;
+    color: #666666;
+    margin-bottom: 1.5rem;
+}
+
+/* Form Controls & Inputs */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 0.4rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #111111;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+/* View Mode vs Edit Mode Field Styling */
+form.view-mode .editable-field {
+    background-color: #fcfcfc;
+    border-color: #e2e2e2;
+    color: #444444;
+    cursor: default;
+    box-shadow: none;
+}
+
+form.edit-mode .editable-field {
+    background-color: #ffffff;
+    border-color: #111111;
+    color: #111111;
+}
+
+.readonly-input {
+    background-color: #f5f5f5 !important;
+    border-color: #e0e0e0 !important;
+    color: #777777 !important;
+    cursor: not-allowed;
+}
+
+/* Action Buttons */
+.action-btn {
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit-btn {
+    background-color: transparent;
+    border: 1px solid #111111;
+    color: #111111;
+}
+
+.edit-btn:hover {
+    background-color: #111111;
+    color: #ffffff;
+}
+
+.form-action-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eeeeee;
+}
+
+.cancel-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #cccccc;
+    color: #333333;
+}
+
+.cancel-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.save-btn {
+    background-color: #111111;
+    border: 1px solid #111111;
+    color: #ffffff;
+}
+
+.save-btn:hover {
+    background-color: #333333;
+}
+
+/* History Cards */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.history-card {
+    border: 1px solid #e0e0e0;
+    background-color: #fafafa;
+    border-radius: 4px;
+    padding: 1.2rem;
+}
+
+.booking-id {
+    font-weight: bold;
+    color: #111111;
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-container {
+        grid-template-columns: 1fr;
+    }
+}

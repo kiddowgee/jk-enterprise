@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Request a custom quote for venue setups, stretch tents, and event equipment from JK Enterprise.">
+    <title>JK Enterprise - Request a Quote</title>
+    <link rel="stylesheet" href="../styles/contact.css">
+    <link rel="stylesheet" href="../styles/index.css">
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="../index.html">JK Enterprise</a>
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <!-- Signed-Out Only Navigation -->
+            <li class="logged-out-only"><a href="../index.html">Home</a></li>
+            <li class="logged-out-only"><a href="../signin.html" class="auth-btn">Sign In</a></li>
+
+            <!-- Signed-In Only Navigation -->
+            <li class="logged-in-only"><a href="../index.html">Home</a></li>
+            <li class="logged-in-only"><a href="../about.html">About</a></li>
+            <li class="logged-in-only"><a href="services.html">Services</a></li>
+            <li class="logged-in-only"><a href="../contact.html">Contact</a></li>
+            <li class="logged-in-only">
+                <a href="../profile.html" class="profile-nav-link" aria-label="User Profile">
+                    <div class="nav-avatar" id="headerAvatar">JD</div>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+    <main>
+        <section class="page-header">
+            <h1>Venue Setup Quote Request</h1>
+            <p>Tell us about your event vision, location, and guest capacity to receive a custom proposal.</p>
+        </section>
+
+        <section class="contact-container" style="grid-template-columns: 1fr;">
+            <div class="contact-form-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
+                <h2>Event Setup Details</h2>
+                <form id="quoteForm">
+                    <div class="form-group">
+                        <label for="quoteName">Full Name *</label>
+                        <input type="text" id="quoteName" required placeholder="Jane Doe">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quoteEmail">Email Address *</label>
+                        <input type="email" id="quoteEmail" required placeholder="jane@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quotePhone">Phone Number *</label>
+                        <input type="tel" id="quotePhone" required placeholder="(123) 456-7890">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="eventDate">Event Date *</label>
+                        <input type="date" id="eventDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guestCount">Estimated Number of Guests *</label>
+                        <input type="number" id="guestCount" required placeholder="e.g. 150">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="setupRequirements">Equipment Needed *</label>
+                        <textarea id="setupRequirements" rows="4" required placeholder="Specify stretch tents, table types, chair counts, staging, or layout requirements..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Quote Request</button>
+                    <p id="quoteFeedback" class="form-feedback"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h4>JK Enterprise</h4>
+                <p>123 Business Street, Suite 100</p>
+                <p>Email: info@jkenterprise.com</p>
+                <p>Phone: (123) 456-7890</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 JK Enterprise. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../scripts/contact.js"></script>
+    <script src="../scripts/auth.js"></script>
+</body>
+</html>

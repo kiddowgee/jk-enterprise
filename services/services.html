@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore services offered by JK Enterprise: venue setup quotes, mobile fridge and toilet rentals, and distance-based bakkie and trailer hires.">
+    <title>JK Enterprise - Services & Rental Catalogue</title>
+    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/services.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="../index.html">JK Enterprise</a>
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <!-- Signed-Out Only Navigation -->
+                <li class="logged-out-only"><a href="../index.html">Home</a></li>
+                <li class="logged-out-only"><a href="../signin.html" class="auth-btn">Sign In</a></li>
+
+                <!-- Signed-In Only Navigation -->
+                <li class="logged-in-only"><a href="../index.html">Home</a></li>
+                <li class="logged-in-only"><a href="../about.html">About</a></li>
+                <li class="logged-in-only"><a href="services.html" class="active">Services</a></li>
+                <li class="logged-in-only"><a href="../contact.html">Contact</a></li>
+                <li class="logged-in-only">
+                    <a href="../profile.html" class="profile-nav-link" aria-label="User Profile">
+                        <div class="nav-avatar" id="headerAvatar">JD</div>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <h1>Services & Rental Rates</h1>
+            <p>Custom quotes for venue setups, fixed rates for mobile units, and distance-based rates for vehicle hire.</p>
+        </section>
+
+        <section class="services-container">
+            
+            <!-- Service 1: Venue Setup & Rental -->
+            <article class="service-card" id="venue-setup">
+                <div class="service-summary">
+                    <span class="pricing-tag">Quote Required</span>
+                    <h2>Venue Setup & Event Rentals</h2>
+                    <p>Complete custom event setups including tents, tables, chairs, and layout configurations tailored to your specific event requirements.</p>
+                    <button type="button" class="toggle-details-btn">
+                        View Details <span class="arrow">&darr;</span>
+                    </button>
+                </div>
+
+                <div class="service-details-drawer">
+                    <div class="drawer-content">
+                        <h3>Custom Setup & Planning</h3>
+                        <p>Because every venue size, terrain, and layout requirement is unique, venue setups are calculated on a custom quote basis after reviewing your site needs.</p>
+                        <ul class="service-features">
+                            <li><strong>Structures:</strong> Stretch tents, marquees, and shade gazebos tailored to capacity.</li>
+                            <li><strong>Furniture:</strong> Trestle tables, round banquet tables, and standard or premium seating.</li>
+                            <li><strong>Full Service:</strong> Includes on-site delivery, physical setup, safety checks, and post-event teardown.</li>
+                        </ul>
+                        <a href="quote.html" class="service-cta">Request a Custom Quote</a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Service 2: Mobile Facilities -->
+            <article class="service-card" id="mobile-rentals">
+                <div class="service-summary">
+                    <span class="pricing-tag">Fixed Rental Rates</span>
+                    <h2>Mobile Fridge & Toilet Rentals</h2>
+                    <p>Hygienic, heavy-duty mobile cold rooms and portable toilets available for daily and weekend hires.</p>
+                    <button type="button" class="toggle-details-btn">
+                        View Fleet & Rates <span class="arrow">&darr;</span>
+                    </button>
+                </div>
+
+                <div class="service-details-drawer">
+                    <div class="drawer-content">
+                        <h3>Mobile Refrigeration Units</h3>
+                        <div class="item-specs-grid">
+                            <div class="spec-card">
+                                <h4>Compact Mobile Cold Room (2.4m)</h4>
+                                <p><strong>Specs:</strong> Single-axle, 220V power / generator compatible, internal shelving, temp control (+2°C to -5°C).</p>
+                                <p class="price-text"><strong>Price:</strong> R850 / day</p>
+                            </div>
+                            <div class="spec-card">
+                                <h4>Large Event Cold Trailer (3.0m)</h4>
+                                <p><strong>Specs:</strong> Dual-axle, heavy insulation, internal LED lighting, lockable rear door, dual-power input.</p>
+                                <p class="price-text"><strong>Price:</strong> R1,400 / day</p>
+                            </div>
+                        </div>
+
+                        <h3>Mobile Toilet Facilities</h3>
+                        <div class="item-specs-grid">
+                            <div class="spec-card">
+                                <h4>Standard Chemical Toilet</h4>
+                                <p><strong>Specs:</strong> Self-contained, non-flush/chemical, pre-sanitized, suitable for construction or outdoor crowds.</p>
+                                <p class="price-text"><strong>Price:</strong> R450 / day</p>
+                            </div>
+                            <div class="spec-card">
+                                <h4>VIP Flushing Toilet Trailer</h4>
+                                <p><strong>Specs:</strong> Dual units (His/Hers), running water sink, solar lighting, vanity mirror, flush mechanism.</p>
+                                <p class="price-text"><strong>Price:</strong> R1,200 / day</p>
+                            </div>
+                        </div>
+                        
+                        <a href="rent-mobile.html" class="service-cta">Rent Mobile Facilities</a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Service 3: Vehicles & Trailers -->
+            <article class="service-card" id="vehicle-rentals">
+                <div class="service-summary">
+                    <span class="pricing-tag">Distance Rates & Verification</span>
+                    <h2>Bakkie & Trailer Rentals</h2>
+                    <p>Reliable hauling bakkies and utility trailers billed with flexible base rates and distance pricing.</p>
+                    <button type="button" class="toggle-details-btn">
+                        View Fleet, Rates & Verification <span class="arrow">&darr;</span>
+                    </button>
+                </div>
+
+                <div class="service-details-drawer">
+                    <div class="drawer-content">
+                        <h3>Fleet Specifications & Distance Pricing</h3>
+                        <div class="item-specs-grid">
+                            <div class="spec-card">
+                                <h4>1-Ton Single Cab Bakkie</h4>
+                                <p><strong>Specs:</strong> Manual transmission, diesel, tie-down rails, 1,000kg payload capacity.</p>
+                                <p class="price-text"><strong>Rates:</strong> R500 base rate/day (+ distance on checkout)</p>
+                            </div>
+                            <div class="spec-card">
+                                <h4>Open Utility Trailer (2.5m)</h4>
+                                <p><strong>Specs:</strong> Single-axle, high mesh sides, removable tailboard, 750kg GVM.</p>
+                                <p class="price-text"><strong>Rates:</strong> R250 base rate/day (+ distance on checkout)</p>
+                            </div>
+                            <div class="spec-card">
+                                <h4>Enclosed Luggage & Cargo Trailer</h4>
+                                <p><strong>Specs:</strong> Weatherproof box trailer, rear locking doors, dual-axle stability.</p>
+                                <p class="price-text"><strong>Rates:</strong> R350 base rate/day (+ distance on checkout)</p>
+                            </div>
+                        </div>
+
+                        <div class="verification-box">
+                            <h3>Rental Verification Requirements</h3>
+                            <p>To hire a bakkie or trailer, renters must present driver's license, SA ID, proof of residence, and a security deposit.</p>
+                        </div>
+
+                        <a href="rent-vehicles.html" class="service-cta">Rent Bakkie / Trailer</a>
+                    </div>
+                </div>
+            </article>
+
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h4>JK Enterprise</h4>
+                <p>123 Business Street, Suite 100</p>
+                <p>Email: info@jkenterprise.com</p>
+                <p>Phone: (123) 456-7890</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 JK Enterprise. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/services.js"></script>
+</body>
+</html>
