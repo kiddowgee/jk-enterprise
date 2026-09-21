@@ -1,7 +1,13 @@
 (function () {
+    // -------------------------------------------------------------------------
+    // Backend API URL Configuration (Render Live Database Server)
+    // -------------------------------------------------------------------------
+    const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
+
+    // 1. Session Persistence State
     const isLoggedIn = localStorage.getItem('jkUserLoggedIn') === 'true';
 
-    // Set state class immediately
+    // Apply visibility class immediately before DOM renders to prevent menu flickering
     if (isLoggedIn) {
         document.documentElement.classList.add('user-logged-in');
     } else {
@@ -12,7 +18,7 @@
         if (isLoggedIn) {
             document.body.classList.add('user-logged-in');
 
-            // Set user avatar initials
+            // Render profile initials in header avatar
             const savedUser = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
             const avatarEl = document.getElementById('headerAvatar');
             if (savedUser.name && avatarEl) {
@@ -23,9 +29,9 @@
             document.body.classList.remove('user-logged-in');
         }
 
-        // ==========================================
-        // Account Type Toggle (Individual vs Business)
-        // ==========================================
+        // -------------------------------------------------------------------------
+        // 2. Account Type Selector Toggle (Individual vs Business)
+        // -------------------------------------------------------------------------
         const accountTypeSelect = document.getElementById('accountType');
         const companyNameGroup = document.getElementById('companyNameGroup');
         const companyInput = document.getElementById('regCompanyName');
@@ -42,9 +48,9 @@
             });
         }
 
-        // ==========================================
-        // Sign In / Sign Up Tab Switching
-        // ==========================================
+        // -------------------------------------------------------------------------
+        // 3. Tab Navigation Switching (Sign In / Sign Up)
+        // -------------------------------------------------------------------------
         const tabSignIn = document.getElementById('tabSignIn');
         const tabSignUp = document.getElementById('tabSignUp');
         const signInForm = document.getElementById('signInForm');
@@ -75,53 +81,157 @@
         if (switchToSignUp) switchToSignUp.addEventListener('click', showSignUp);
         if (switchToSignIn) switchToSignIn.addEventListener('click', showSignIn);
 
-        // ==========================================
-        // Form Submissions
-        // ==========================================
-        if (signInForm) {
-            signInForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                localStorage.setItem('jkUserLoggedIn', 'true');
+        // -------------------------------------------------------------------------
+        // 4. Live API Authentication Submissions
+        // -------------------------------------------------------------------------
+        const feedbackEl = document.getElementById('authFeedback');
 
-                const isSubfolder = window.location.pathname.includes('/services/');
-                window.location.href = isSubfolder ? '../index.html' : 'index.html';
+        // --- Sign In Request ---
+        if (signInForm) {
+            signInForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (feedbackEl) {
+                    feedbackEl.textContent = 'Authenticating...';
+                    feedbackEl.className = 'form-feedback';
+                }
+
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                try {
+                    const res = await fetch(`${API_URL}/signin`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        // Persist user payload for immediate UI rendering
+                        localStorage.setItem('jkUserProfile', JSON.stringify(data.user));
+                        localStorage.setItem('jkUserLoggedIn', 'true');
+
+                        const isSubfolder = window.location.pathname.includes('/services/');
+                        window.location.href = isSubfolder ? '../index.html' : 'index.html';
+                    } else {
+                        if (feedbackEl) {
+                            feedbackEl.textContent = data.error || 'Invalid email or password.';
+                            feedbackEl.className = 'form-feedback error';
+                        }
+                    }
+                } catch (err) {
+                    console.error('Sign-in error:', err);
+                    if (feedbackEl) {
+                        feedbackEl.textContent = 'Unable to connect to live authentication server.';
+                        feedbackEl.className = 'form-feedback error';
+                    }
+                }
             });
         }
 
+        // --- Sign Up Request ---
         if (signUpForm) {
-            signUpForm.addEventListener('submit', (e) => {
+            signUpForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                if (feedbackEl) {
+                    feedbackEl.textContent = 'Creating account...';
+                    feedbackEl.className = 'form-feedback';
+                }
 
                 const accountType = accountTypeSelect ? accountTypeSelect.value : 'individual';
                 const name = document.getElementById('regName').value;
                 const company = accountType === 'business' && companyInput ? companyInput.value : '';
                 const email = document.getElementById('regEmail').value;
                 const phone = document.getElementById('regPhone').value;
+                const password = document.getElementById('regPassword').value;
 
-                // Save user profile details
-                const profilePayload = {
-                    accountType,
-                    name,
-                    company,
-                    email,
-                    phone
-                };
+                try {
+                    const res = await fetch(`${API_URL}/signup`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ accountType, name, company, email, phone, password })
+                    });
 
-                localStorage.setItem('jkUserProfile', JSON.stringify(profilePayload));
-                localStorage.setItem('jkUserLoggedIn', 'true');
+                    const data = await res.json();
 
-                const isSubfolder = window.location.pathname.includes('/services/');
-                window.location.href = isSubfolder ? '../profile.html' : 'profile.html';
+                    if (res.ok && data.success) {
+                        localStorage.setItem('jkUserProfile', JSON.stringify(data.user));
+                        localStorage.setItem('jkUserLoggedIn', 'true');
+
+                        const isSubfolder = window.location.pathname.includes('/services/');
+                        window.location.href = isSubfolder ? '../profile.html' : 'profile.html';
+                    } else {
+                        if (feedbackEl) {
+                            feedbackEl.textContent = data.error || 'Failed to create account.';
+                            feedbackEl.className = 'form-feedback error';
+                        }
+                    }
+                } catch (err) {
+                    console.error('Sign-up error:', err);
+                    if (feedbackEl) {
+                        feedbackEl.textContent = 'Unable to connect to live server.';
+                        feedbackEl.className = 'form-feedback error';
+                    }
+                }
             });
         }
 
-        // ==========================================
-        // Sign Out Action (Profile Page)
-        // ==========================================
+        // -------------------------------------------------------------------------
+        // 5. Intercept Booking Actions for Signed-Out Users
+        // -------------------------------------------------------------------------
+        const rentalActionBtns = document.querySelectorAll('.service-cta, .booking-action');
+        let authModal = document.getElementById('authModal');
+
+        if (!authModal && !isLoggedIn) {
+            authModal = document.createElement('div');
+            authModal.id = 'authModal';
+            authModal.className = 'modal-overlay';
+            authModal.style.display = 'none';
+            authModal.innerHTML = `
+                <div class="modal-card">
+                    <h3>Sign In Required</h3>
+                    <p>You need to be signed in to proceed with booking or selecting this service. Would you like to sign in now?</p>
+                    <div class="modal-actions">
+                        <button id="modalCancel" class="modal-btn cancel">Cancel</button>
+                        <button id="modalConfirm" class="modal-btn confirm">Sign In</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(authModal);
+        }
+
+        rentalActionBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetUrl = btn.getAttribute('href');
+
+                if (!isLoggedIn && targetUrl && (targetUrl.includes('rent') || targetUrl.includes('booking'))) {
+                    e.preventDefault();
+
+                    if (authModal) {
+                        authModal.style.display = 'flex';
+
+                        document.getElementById('modalConfirm').onclick = () => {
+                            const isSubfolder = window.location.pathname.includes('/services/');
+                            window.location.href = isSubfolder ? '../signin.html' : 'signin.html';
+                        };
+
+                        document.getElementById('modalCancel').onclick = () => {
+                            authModal.style.display = 'none';
+                        };
+                    }
+                }
+            });
+        });
+
+        // -------------------------------------------------------------------------
+        // 6. Sign Out Action
+        // -------------------------------------------------------------------------
         const signOutBtns = document.querySelectorAll('#sidebarSignOutBtn, #bottomSignOutBtn');
         signOutBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 localStorage.setItem('jkUserLoggedIn', 'false');
+                localStorage.removeItem('jkUserProfile');
 
                 const isSubfolder = window.location.pathname.includes('/services/');
                 window.location.href = isSubfolder ? '../index.html' : 'index.html';
