@@ -370,3 +370,23 @@ body.user-logged-in .logged-out-only {
     background-color: #111111;
     color: #ffffff;
 }
+
+/* Navigation Access Restrictions */
+.logged-in-only {
+    display: none !important;
+}
+
+.logged-out-only {
+    display: inline-block !important;
+}
+
+/* When active session exists */
+html.user-logged-in .logged-in-only,
+body.user-logged-in .logged-in-only {
+    display: inline-block !important;
+}
+
+html.user-logged-in .logged-out-only,
+body.user-logged-in .logged-out-only {
+    display: none !important;
+}
