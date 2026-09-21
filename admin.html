@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JK Enterprise - Admin Dashboard</title>
+    <link rel="stylesheet" href="styles/index.css">
+    <style>
+        .admin-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .stat-card { background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .stat-card h3 { font-size: 0.875rem; color: #718096; margin-bottom: 0.5rem; text-transform: uppercase; }
+        .stat-card p { font-size: 1.75rem; font-weight: 700; color: #1a202c; }
+        .table-card { background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 1.5rem; overflow-x: auto; }
+        .admin-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .admin-table th, .admin-table td { padding: 0.85rem 1rem; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; }
+        .admin-table th { background-color: #f7fafc; color: #4a5568; font-weight: 600; }
+        .status-select { padding: 0.35rem 0.5rem; border-radius: 4px; border: 1px solid #cbd5e0; font-size: 0.85rem; font-weight: 600; }
+        .badge { padding: 0.25rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-pending { background-color: #fefcbf; color: #744210; }
+        .badge-approved { background-color: #c6f6d5; color: #22543d; }
+        .badge-dispatched { background-color: #bee3f8; color: #2b6cb0; }
+        .badge-completed { background-color: #e2e8f0; color: #2d3748; }
+        .badge-cancelled { background-color: #fed7d7; color: #742a2a; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo"><a href="index.html">JK Enterprise Admin</a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Main Site</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h1 style="margin-bottom: 1.5rem;">Operations Dashboard</h1>
+
+        <!-- Analytics Stats Bar -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Revenue</h3>
+                <p id="statRevenue">R 0.00</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Orders</h3>
+                <p id="statBookings">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Actions</h3>
+                <p id="statPending">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Registered Users</h3>
+                <p id="statUsers">0</p>
+            </div>
+        </div>
+
+        <!-- Bookings Management Table -->
+        <div class="table-card">
+            <h2 style="margin-bottom: 1rem;">Customer Rental Orders</h2>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Email / Phone</th>
+                        <th>Start Date</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="adminBookingsTable">
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #718096;">Loading booking orders...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchStats();
+            fetchBookings();
+        });
+
+        async function fetchStats() {
+            try {
+                const res = await fetch(`${API_URL}/admin/stats`);
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('statRevenue').textContent = `R ${data.stats.totalRevenue.toFixed(2)}`;
+                    document.getElementById('statBookings').textContent = data.stats.bookingsCount;
+                    document.getElementById('statPending').textContent = data.stats.pendingCount;
+                    document.getElementById('statUsers').textContent = data.stats.usersCount;
+                }
+            } catch (err) {
+                console.error('Failed to load admin stats:', err);
+            }
+        }
+
+        async function fetchBookings() {
+            const tableBody = document.getElementById('adminBookingsTable');
+            try {
+                const res = await fetch(`${API_URL}/admin/bookings`);
+                const data = await res.json();
+
+                if (data.success && data.bookings.length > 0) {
+                    tableBody.innerHTML = data.bookings.map(order => `
+                        <tr>
+                            <td><strong>#${order.id}</strong></td>
+                            <td>${order.customerName || 'N/A'}</td>
+                            <td>${order.userEmail}<br><small style="color:#718096;">${order.customerPhone || ''}</small></td>
+                            <td>${new Date(order.startDate).toLocaleDateString()}</td>
+                            <td><strong>R ${parseFloat(order.grandTotal).toFixed(2)}</strong></td>
+                            <td><span class="badge badge-${(order.status || 'pending').toLowerCase()}">${order.status || 'Pending'}</span></td>
+                            <td>
+                                <select class="status-select" onchange="updateOrderStatus(${order.id}, this.value)">
+                                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Approved" ${order.status === 'Approved' ? 'selected' : ''}>Approve</option>
+                                    <option value="Dispatched" ${order.status === 'Dispatched' ? 'selected' : ''}>Dispatch</option>
+                                    <option value="Completed" ${order.status === 'Completed' ? 'selected' : ''}>Complete</option>
+                                    <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancel</option>
+                                </select>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No rental orders found.</td></tr>';
+                }
+            } catch (err) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: red;">Failed to connect to backend server.</td></tr>';
+            }
+        }
+
+        async function updateOrderStatus(bookingId, newStatus) {
+            try {
+                const res = await fetch(`${API_URL}/admin/bookings/${bookingId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    fetchStats();
+                    fetchBookings();
+                } else {
+                    alert('Failed to update status.');
+                }
+            } catch (err) {
+                alert('Connection error while updating status.');
+            }
+        }
+    </script>
+</body>
+</html>
