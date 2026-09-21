@@ -21,11 +21,20 @@
                 <span class="bar"></span>
             </button>
             <ul class="nav-links" id="navLinks">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="services/services.html">Services</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="signin.html" class="auth-btn active">Sign In</a></li>
+                <!-- Links visible ONLY when logged out -->
+                <li class="logged-out-only"><a href="index.html">Home</a></li>
+                <li class="logged-out-only"><a href="signin.html" class="auth-btn active">Sign In</a></li>
+
+                <!-- Links visible ONLY when logged in -->
+                <li class="logged-in-only"><a href="index.html">Home</a></li>
+                <li class="logged-in-only"><a href="about.html">About</a></li>
+                <li class="logged-in-only"><a href="services/services.html">Services</a></li>
+                <li class="logged-in-only"><a href="contact.html">Contact</a></li>
+                <li class="logged-in-only">
+                    <a href="profile.html" class="profile-nav-link" aria-label="User Profile">
+                        <div class="nav-avatar" id="headerAvatar">JD</div>
+                    </a>
+                </li>
             </ul>
         </nav>
     </header>
