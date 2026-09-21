@@ -1,11 +1,11 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const app = express();
 
-// Enable CORS for cross-origin requests
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -54,15 +54,16 @@ async function initDb() {
 }
 initDb().catch(console.error);
 
-// Auth Routes
+// Auth Routes - Sign Up with Hashed Passwords
 app.post('/api/signup', async (req, res) => {
     const { accountType, name, company, email, phone, password } = req.body;
     try {
+        const hashedPassword = await bcrypt.hash(password, 10);
         const result = await pool.query(
             `INSERT INTO users (account_type, full_name, company_name, email, phone, password)
              VALUES ($1, $2, $3, $4, $5, $6) 
              RETURNING account_type AS "accountType", full_name AS "name", company_name AS "company", email, phone`,
-            [accountType, name, company, email, phone, password]
+            [accountType, name, company, email, phone, hashedPassword]
         );
         res.status(201).json({ success: true, user: result.rows[0] });
     } catch (err) {
@@ -71,22 +72,55 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
+// Auth Routes - Sign In with Hashed Password Verification
 app.post('/api/signin', async (req, res) => {
     const { email, password } = req.body;
     try {
         const result = await pool.query(
-            `SELECT account_type AS "accountType", full_name AS "name", company_name AS "company", email, phone, address 
-             FROM users WHERE email = $1 AND password = $2`,
-            [email, password]
+            `SELECT account_type AS "accountType", full_name AS "name", company_name AS "company", email, phone, password, address 
+             FROM users WHERE email = $1`,
+            [email]
         );
-        if (result.rows.length > 0) {
-            res.json({ success: true, user: result.rows[0] });
+
+        if (result.rows.length === 0) {
+            return res.status(401).json({ success: false, error: 'Invalid email or password.' });
+        }
+
+        const user = result.rows[0];
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (isMatch) {
+            delete user.password;
+            res.json({ success: true, user });
         } else {
             res.status(401).json({ success: false, error: 'Invalid email or password.' });
         }
     } catch (err) {
         console.error('Signin DB error:', err);
         res.status(500).json({ success: false, error: 'Database error.' });
+    }
+});
+
+// Profile Update Route
+app.put('/api/users/profile', async (req, res) => {
+    const { email, name, phone, company, address } = req.body;
+    try {
+        const result = await pool.query(
+            `UPDATE users 
+             SET full_name = $1, phone = $2, company_name = $3, address = $4
+             WHERE email = $5
+             RETURNING account_type AS "accountType", full_name AS "name", company_name AS "company", email, phone, address`,
+            [name, phone, company, address, email]
+        );
+
+        if (result.rows.length > 0) {
+            res.json({ success: true, user: result.rows[0] });
+        } else {
+            res.status(404).json({ success: false, error: 'User profile not found.' });
+        }
+    } catch (err) {
+        console.error('Profile update DB error:', err);
+        res.status(500).json({ success: false, error: 'Failed to update profile.' });
     }
 });
 
