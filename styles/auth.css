@@ -1,39 +1,51 @@
-/* Auth Card Container */
-.auth-card {
-    max-width: 450px;
-    margin: 0 auto;
-    width: 100%;
-    background-color: #ffffff;
-    border: 1px solid #dddddd;
-    border-radius: 4px;
-    padding: 2rem;
+/* Authentication Page Container */
+.auth-page {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    background-color: #f4f5f7;
 }
 
-/* Auth Tabs */
+/* Card Styling */
+.auth-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eaedf1;
+}
+
+/* Tab Navigation Header */
 .auth-tabs {
     display: flex;
-    border-bottom: 2px solid #e0e0e0;
-    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #edf2f7;
+    margin-bottom: 2rem;
 }
 
-.auth-tab-btn {
+.auth-tabs .tab-btn {
     flex: 1;
-    padding: 0.75rem;
     background: none;
     border: none;
+    padding: 1rem 0;
     font-size: 1rem;
-    font-weight: bold;
-    color: #666666;
+    font-weight: 600;
+    color: #718096;
     cursor: pointer;
+    transition: all 0.2s ease;
     border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
 }
 
-.auth-tab-btn.active {
-    color: #111111;
-    border-bottom-color: #111111;
+.auth-tabs .tab-btn.active {
+    color: #1a202c;
+    border-bottom-color: #1a202c;
 }
 
-/* Dynamic Forms */
+/* Form Switching Visibility */
 .auth-form {
     display: none;
 }
@@ -42,135 +54,97 @@
     display: block;
 }
 
-.auth-toggle-prompt {
-    font-size: 0.88rem;
-    color: #555555;
-    margin-top: 1.25rem;
-    text-align: center;
+/* Form Typography & Structure */
+.auth-form h2 {
+    font-size: 1.75rem;
+    color: #1a202c;
+    margin-bottom: 0.5rem;
 }
 
-.inline-link-btn {
+.form-subtitle {
+    color: #718096;
+    font-size: 0.925rem;
+    margin-bottom: 1.75rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    background-color: #f8fafc;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #1a202c;
+    background-color: #ffffff;
+}
+
+/* Submit & Helper Buttons */
+.auth-submit-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: #1a202c;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.auth-submit-btn:hover {
+    background-color: #2d3748;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: #718096;
+}
+
+.link-btn {
     background: none;
     border: none;
-    color: #111111;
-    font-weight: bold;
+    color: #1a202c;
+    font-weight: 600;
+    cursor: pointer;
     text-decoration: underline;
-    cursor: pointer;
-    font-size: inherit;
+    padding: 0;
 }
 
-/* Sign Out Buttons on Profile */
-.sidebar-footer {
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid #eeeeee;
-}
-
-.signout-btn {
-    width: 100%;
-    background-color: transparent;
-    color: #111111;
-    border: 1px solid #111111;
-    padding: 0.65rem 1rem;
-    font-weight: bold;
-    font-size: 0.9rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.signout-btn:hover {
-    background-color: #111111;
-    color: #ffffff;
-}
-
-.signout-btn.danger {
-    background-color: #c62828;
-    color: #ffffff;
-    border-color: #c62828;
-}
-
-.signout-btn.danger:hover {
-    background-color: #b71c1c;
-}
-
-.profile-bottom-action {
-    margin-top: 3rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #eeeeee;
-}
-
-/* ==========================================
-   Authentication State Navigation Visibility
-   ========================================== */
-
-/* Hide logged-in items by default */
-body:not(.user-logged-in) .logged-in-only {
-    display: none !important;
-}
-
-/* Hide logged-out items when logged in */
-body.user-logged-in .logged-out-only {
-    display: none !important;
-}
-
-/* Modal Popup Styling */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-.modal-card {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 4px;
-    max-width: 420px;
-    width: 90%;
+/* Feedback Notifications */
+.form-feedback {
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-.modal-card h3 {
-    font-size: 1.4rem;
-    color: #111111;
-    margin-bottom: 0.75rem;
+.form-feedback.error {
+    color: #e53e3e;
 }
 
-.modal-card p {
-    font-size: 0.95rem;
-    color: #555555;
-    margin-bottom: 1.5rem;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.modal-btn {
-    padding: 0.6rem 1.25rem;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    font-size: 0.9rem;
-}
-
-.modal-btn.cancel {
-    background-color: #e0e0e0;
-    color: #333333;
-}
-
-.modal-btn.confirm {
-    background-color: #111111;
-    color: #ffffff;
+.form-feedback.success {
+    color: #38a169;
 }
