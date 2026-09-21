@@ -3,7 +3,7 @@ const { Pool } = require('pg');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 require('dotenv').config();
 
 const app = express();
@@ -16,24 +16,16 @@ app.use(cors({
 
 app.use(express.json());
 
+// Initialize Resend Client
+const resendClient = new Resend(process.env.RESEND_API_KEY);
+
 // Database Connection
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
 
-// Configure Nodemailer Transporter using Resend SMTP
-const transporter = nodemailer.createTransport({
-    host: 'smtp.resend.com',
-    port: 465,
-    secure: true,
-    auth: {
-        user: 'resend',
-        pass: process.env.RESEND_API_KEY
-    }
-});
-
-// Initialize Database Tables and Reset Token Columns
+// Initialize Database Tables
 async function initDb() {
     try {
         await pool.query(`
@@ -80,7 +72,6 @@ initDb();
 // Authentication Routes
 // -------------------------------------------------------------------------
 
-// Sign Up
 app.post('/api/signup', async (req, res) => {
     const { accountType, name, company, email, phone, password } = req.body;
     try {
@@ -98,7 +89,6 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
-// Sign In
 app.post('/api/signin', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -128,10 +118,9 @@ app.post('/api/signin', async (req, res) => {
 });
 
 // -------------------------------------------------------------------------
-// Live Email Password Reset Routes
+// Live Resend Email Password Reset Route
 // -------------------------------------------------------------------------
 
-// Request Reset Email
 app.post('/api/forgot-password', async (req, res) => {
     const { email } = req.body;
     try {
@@ -143,7 +132,7 @@ app.post('/api/forgot-password', async (req, res) => {
 
         const name = userCheck.rows[0].full_name || 'Customer';
         const token = crypto.randomBytes(32).toString('hex');
-        const expiry = new Date(Date.now() + 3600000); // Expires in 1 hour
+        const expiry = new Date(Date.now() + 3600000); // 1 hour expiry
 
         await pool.query(
             'UPDATE users SET reset_token = $1, reset_token_expiry = $2 WHERE email = $3',
@@ -152,8 +141,9 @@ app.post('/api/forgot-password', async (req, res) => {
 
         const resetLink = `https://kiddowgee.github.io/jk-enterprise/reset-password.html?token=${token}`;
 
-        const mailOptions = {
-            from: 'JK Enterprise <onboarding@resend.dev>',
+        // Send Email via Resend API
+        const emailResponse = await resendClient.emails.send({
+            from: 'onboarding@resend.dev',
             to: email,
             subject: 'JK Enterprise - Password Reset Security Code',
             html: `
@@ -170,21 +160,23 @@ app.post('/api/forgot-password', async (req, res) => {
                     <p style="font-size: 0.8em; color: #888;">If you did not request this, please ignore this email.</p>
                 </div>
             `
-        };
+        });
 
-        await transporter.sendMail(mailOptions);
+        if (emailResponse.error) {
+            console.error('Resend API error:', emailResponse.error);
+            return res.status(500).json({ success: false, error: emailResponse.error.message || 'Failed to send reset email.' });
+        }
 
         res.json({ 
             success: true, 
             message: 'A password reset link has been sent directly to your email address!' 
         });
     } catch (err) {
-        console.error('Forgot password email error:', err);
-        res.status(500).json({ success: false, error: 'Failed to send reset email. Verify API Key settings.' });
+        console.error('Forgot password error:', err);
+        res.status(500).json({ success: false, error: 'Failed to send reset email. Check server logs.' });
     }
 });
 
-// Reset Password with Token Validation
 app.post('/api/reset-password', async (req, res) => {
     const { token, newPassword } = req.body;
     try {
