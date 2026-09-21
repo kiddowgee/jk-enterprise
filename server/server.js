@@ -4,13 +4,20 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+
+// Configure CORS to allow cross-origin requests from frontend
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 // Database Connection
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false } // Required for Render Postgres connection
+    ssl: { rejectUnauthorized: false } // Required for Render Postgres
 });
 
 // Initialize Tables
@@ -43,6 +50,7 @@ async function initDb() {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `);
+    console.log('Database tables initialized successfully.');
 }
 initDb().catch(console.error);
 
@@ -57,6 +65,7 @@ app.post('/api/signup', async (req, res) => {
         );
         res.status(201).json({ success: true, user: result.rows[0] });
     } catch (err) {
+        console.error('Signup DB error:', err);
         res.status(400).json({ success: false, error: 'Email already registered or invalid data.' });
     }
 });
@@ -74,6 +83,7 @@ app.post('/api/signin', async (req, res) => {
             res.status(401).json({ success: false, error: 'Invalid email or password.' });
         }
     } catch (err) {
+        console.error('Signin DB error:', err);
         res.status(500).json({ success: false, error: 'Database error.' });
     }
 });
@@ -89,9 +99,10 @@ app.post('/api/bookings', async (req, res) => {
         );
         res.status(201).json({ success: true, bookingId: result.rows[0].id });
     } catch (err) {
+        console.error('Booking DB error:', err);
         res.status(500).json({ success: false, error: 'Failed to record booking.' });
     }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

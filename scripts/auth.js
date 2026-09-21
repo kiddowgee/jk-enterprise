@@ -1,13 +1,13 @@
 (function () {
     // -------------------------------------------------------------------------
-    // Backend API URL Configuration (Render Live Database Server)
+    // Backend API URL Configuration
     // -------------------------------------------------------------------------
     const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
 
     // 1. Session Persistence State
     const isLoggedIn = localStorage.getItem('jkUserLoggedIn') === 'true';
 
-    // Apply visibility class immediately before DOM renders to prevent menu flickering
+    // Apply visibility class immediately before render to avoid flickering
     if (isLoggedIn) {
         document.documentElement.classList.add('user-logged-in');
     } else {
@@ -18,7 +18,7 @@
         if (isLoggedIn) {
             document.body.classList.add('user-logged-in');
 
-            // Render profile initials in header avatar
+            // Render profile initials in header
             const savedUser = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
             const avatarEl = document.getElementById('headerAvatar');
             if (savedUser.name && avatarEl) {
@@ -82,7 +82,7 @@
         if (switchToSignIn) switchToSignIn.addEventListener('click', showSignIn);
 
         // -------------------------------------------------------------------------
-        // 4. Live API Authentication Submissions
+        // 4. Remote API Form Submissions (Render Live Server)
         // -------------------------------------------------------------------------
         const feedbackEl = document.getElementById('authFeedback');
 
@@ -108,7 +108,6 @@
                     const data = await res.json();
 
                     if (res.ok && data.success) {
-                        // Persist user payload for immediate UI rendering
                         localStorage.setItem('jkUserProfile', JSON.stringify(data.user));
                         localStorage.setItem('jkUserLoggedIn', 'true');
 
@@ -121,7 +120,7 @@
                         }
                     }
                 } catch (err) {
-                    console.error('Sign-in error:', err);
+                    console.error('Sign-in network error:', err);
                     if (feedbackEl) {
                         feedbackEl.textContent = 'Unable to connect to live authentication server.';
                         feedbackEl.className = 'form-feedback error';
@@ -168,7 +167,7 @@
                         }
                     }
                 } catch (err) {
-                    console.error('Sign-up error:', err);
+                    console.error('Sign-up network error:', err);
                     if (feedbackEl) {
                         feedbackEl.textContent = 'Unable to connect to live server.';
                         feedbackEl.className = 'form-feedback error';
@@ -178,7 +177,7 @@
         }
 
         // -------------------------------------------------------------------------
-        // 5. Intercept Booking Actions for Signed-Out Users
+        // 5. Intercept Booking Actions for Signed-out Users
         // -------------------------------------------------------------------------
         const rentalActionBtns = document.querySelectorAll('.service-cta, .booking-action');
         let authModal = document.getElementById('authModal');
