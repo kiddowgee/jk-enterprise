@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const app = express();
 
-// Configure CORS to allow cross-origin requests from frontend
+// Enable CORS for frontend requests
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -20,7 +20,7 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false } // Required for Render Postgres
 });
 
-// Initialize Tables
+// Initialize Database Tables
 async function initDb() {
     await pool.query(`
         CREATE TABLE IF NOT EXISTS users (
@@ -54,13 +54,14 @@ async function initDb() {
 }
 initDb().catch(console.error);
 
-// Auth Routes
+// Auth Routes - Formatted keys to camelCase for frontend compatibility
 app.post('/api/signup', async (req, res) => {
     const { accountType, name, company, email, phone, password } = req.body;
     try {
         const result = await pool.query(
             `INSERT INTO users (account_type, full_name, company_name, email, phone, password)
-             VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, account_type, full_name, company_name, email, phone`,
+             VALUES ($1, $2, $3, $4, $5, $6) 
+             RETURNING account_type AS "accountType", full_name AS "name", company_name AS "company", email, phone`,
             [accountType, name, company, email, phone, password]
         );
         res.status(201).json({ success: true, user: result.rows[0] });
@@ -74,7 +75,8 @@ app.post('/api/signin', async (req, res) => {
     const { email, password } = req.body;
     try {
         const result = await pool.query(
-            `SELECT id, account_type, full_name, company_name, email, phone, address FROM users WHERE email = $1 AND password = $2`,
+            `SELECT account_type AS "accountType", full_name AS "name", company_name AS "company", email, phone, address 
+             FROM users WHERE email = $1 AND password = $2`,
             [email, password]
         );
         if (result.rows.length > 0) {

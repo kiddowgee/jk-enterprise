@@ -22,24 +22,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ==========================================
-    // Populate Profile Fields & Manage Editable State
-    // ==========================================
+    // Populate Profile Fields
     const profileForm = document.getElementById('profileDetailsForm');
     const editProfileBtn = document.getElementById('editProfileBtn');
     const formActionButtons = document.getElementById('formActionButtons');
     const discardChangesBtn = document.getElementById('discardChangesBtn');
     const detailsFeedback = document.getElementById('detailsFeedback');
-
     const editableFields = document.querySelectorAll('.editable-field');
 
-    // Read saved user state from localStorage
-    let savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
-
     function populateFields() {
-        savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
+        const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
 
-        if (savedProfile.name) {
+        // Fallbacks for both camelCase and snake_case property keys
+        const name = savedProfile.name || savedProfile.full_name || '';
+        const email = savedProfile.email || '';
+        const phone = savedProfile.phone || savedProfile.mobile || '';
+        const accountType = savedProfile.accountType || savedProfile.account_type || 'individual';
+        const company = savedProfile.company || savedProfile.company_name || '';
+        const address = savedProfile.address || '';
+
+        if (name) {
             const sidebarName = document.getElementById('sidebarName');
             const sidebarEmail = document.getElementById('sidebarEmail');
             const avatarInitials = document.getElementById('avatarInitials');
@@ -54,65 +56,54 @@ document.addEventListener('DOMContentLoaded', () => {
             const inputPhone = document.getElementById('profilePhone');
             const inputAddress = document.getElementById('profileAddress');
 
-            const initials = savedProfile.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-            if (sidebarName) sidebarName.textContent = savedProfile.name;
-            if (sidebarEmail) sidebarEmail.textContent = savedProfile.email || '';
+            if (sidebarName) sidebarName.textContent = name;
+            if (sidebarEmail) sidebarEmail.textContent = email;
             if (avatarInitials) avatarInitials.textContent = initials;
             if (headerAvatar) headerAvatar.textContent = initials;
 
             if (sidebarAccountBadge) {
-                sidebarAccountBadge.textContent = savedProfile.accountType === 'business' ? 'Business Client' : 'Individual';
+                sidebarAccountBadge.textContent = accountType === 'business' ? 'Business Client' : 'Individual';
             }
 
             if (inputAccountType) {
-                inputAccountType.value = savedProfile.accountType === 'business' ? 'Company / Business Client' : 'Individual / Personal Use';
+                inputAccountType.value = accountType === 'business' ? 'Company / Business Client' : 'Individual / Personal Use';
             }
 
-            if (savedProfile.accountType === 'business' && companyGroup) {
+            if (accountType === 'business' && companyGroup) {
                 companyGroup.style.display = 'block';
-                if (inputCompany) inputCompany.value = savedProfile.company || '';
+                if (inputCompany) inputCompany.value = company;
             }
 
-            if (inputName) inputName.value = savedProfile.name || '';
-            if (inputEmail) inputEmail.value = savedProfile.email || '';
-            if (inputPhone) inputPhone.value = savedProfile.phone || '';
-            if (inputAddress) inputAddress.value = savedProfile.address || '';
+            if (inputName) inputName.value = name;
+            if (inputEmail) inputEmail.value = email;
+            if (inputPhone) inputPhone.value = phone;
+            if (inputAddress) inputAddress.value = address;
         }
     }
 
-    // Enable Editing View
     function enableEditMode() {
         profileForm.classList.remove('view-mode');
         profileForm.classList.add('edit-mode');
-
         editableFields.forEach(field => field.removeAttribute('readonly'));
-
         editProfileBtn.style.display = 'none';
         formActionButtons.style.display = 'flex';
         if (detailsFeedback) detailsFeedback.textContent = '';
     }
 
-    // Disable Editing View
     function disableEditMode() {
         profileForm.classList.remove('edit-mode');
         profileForm.classList.add('view-mode');
-
         editableFields.forEach(field => field.setAttribute('readonly', 'readonly'));
-
         editProfileBtn.style.display = 'inline-block';
         formActionButtons.style.display = 'none';
     }
 
-    // Initial Population
     populateFields();
 
-    // Edit Button Click
-    if (editProfileBtn) {
-        editProfileBtn.addEventListener('click', enableEditMode);
-    }
+    if (editProfileBtn) editProfileBtn.addEventListener('click', enableEditMode);
 
-    // Discard Button Click
     if (discardChangesBtn) {
         discardChangesBtn.addEventListener('click', () => {
             populateFields();
@@ -124,11 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Save Changes Form Submit
     if (profileForm) {
         profileForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
+            const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
             const updatedProfile = {
                 ...savedProfile,
                 name: document.getElementById('profileFullName').value,
@@ -138,10 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 address: document.getElementById('profileAddress').value
             };
 
-            // Save to local storage
             localStorage.setItem('jkUserProfile', JSON.stringify(updatedProfile));
-
-            // Repopulate & Lock back to Readonly View Mode
             populateFields();
             disableEditMode();
 
@@ -152,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Document Verification Upload Feedback
     const verificationForm = document.getElementById('verificationForm');
     const verificationFeedback = document.getElementById('verificationFeedback');
 
