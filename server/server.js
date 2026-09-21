@@ -3,6 +3,7 @@ const { Pool } = require('pg');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const app = express();
@@ -15,12 +16,24 @@ app.use(cors({
 
 app.use(express.json());
 
+// Database Connection
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
 
-// Auto-migrate tables and columns on server startup
+// Configure Nodemailer Transporter using Resend SMTP
+const transporter = nodemailer.createTransport({
+    host: 'smtp.resend.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'resend',
+        pass: process.env.RESEND_API_KEY
+    }
+});
+
+// Initialize Database Tables and Reset Token Columns
 async function initDb() {
     try {
         await pool.query(`
@@ -38,7 +51,6 @@ async function initDb() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
-            -- Run safety migrations for existing tables
             ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255);
             ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expiry TIMESTAMP;
 
@@ -64,7 +76,11 @@ async function initDb() {
 }
 initDb();
 
-// Auth Routes
+// -------------------------------------------------------------------------
+// Authentication Routes
+// -------------------------------------------------------------------------
+
+// Sign Up
 app.post('/api/signup', async (req, res) => {
     const { accountType, name, company, email, phone, password } = req.body;
     try {
@@ -82,6 +98,7 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
+// Sign In
 app.post('/api/signin', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -110,34 +127,64 @@ app.post('/api/signin', async (req, res) => {
     }
 });
 
-// Password Reset Routes
+// -------------------------------------------------------------------------
+// Live Email Password Reset Routes
+// -------------------------------------------------------------------------
+
+// Request Reset Email
 app.post('/api/forgot-password', async (req, res) => {
     const { email } = req.body;
     try {
-        const userCheck = await pool.query('SELECT email FROM users WHERE email = $1', [email]);
+        const userCheck = await pool.query('SELECT full_name FROM users WHERE email = $1', [email]);
+        
         if (userCheck.rows.length === 0) {
             return res.status(404).json({ success: false, error: 'No account found with this email address.' });
         }
 
+        const name = userCheck.rows[0].full_name || 'Customer';
         const token = crypto.randomBytes(32).toString('hex');
-        const expiry = new Date(Date.now() + 3600000); // 1 hour expiry
+        const expiry = new Date(Date.now() + 3600000); // Expires in 1 hour
 
         await pool.query(
             'UPDATE users SET reset_token = $1, reset_token_expiry = $2 WHERE email = $3',
             [token, expiry, email]
         );
 
+        const resetLink = `https://kiddowgee.github.io/jk-enterprise/reset-password.html?token=${token}`;
+
+        const mailOptions = {
+            from: 'JK Enterprise <onboarding@resend.dev>',
+            to: email,
+            subject: 'JK Enterprise - Password Reset Security Code',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 500px; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+                    <h2 style="color: #111;">Password Reset Request</h2>
+                    <p>Hello ${name},</p>
+                    <p>We received a request to reset your password for your JK Enterprise account.</p>
+                    <p>Click the button below to reset your password. This link expires in 1 hour:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${resetLink}" style="background-color: #1a202c; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Reset Password</a>
+                    </div>
+                    <p style="font-size: 0.9em; color: #555;">Or copy your security token manually:</p>
+                    <p style="background: #f4f5f7; padding: 10px; font-family: monospace; border-radius: 4px; word-break: break-all;">${token}</p>
+                    <p style="font-size: 0.8em; color: #888;">If you did not request this, please ignore this email.</p>
+                </div>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+
         res.json({ 
             success: true, 
-            message: 'Reset token generated successfully.',
-            resetToken: token 
+            message: 'A password reset link has been sent directly to your email address!' 
         });
     } catch (err) {
-        console.error('Forgot password error:', err);
-        res.status(500).json({ success: false, error: 'Failed to process request.' });
+        console.error('Forgot password email error:', err);
+        res.status(500).json({ success: false, error: 'Failed to send reset email. Verify API Key settings.' });
     }
 });
 
+// Reset Password with Token Validation
 app.post('/api/reset-password', async (req, res) => {
     const { token, newPassword } = req.body;
     try {
