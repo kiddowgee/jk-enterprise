@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
+
     // Mobile Navigation Toggle
     const menuToggle = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
@@ -19,6 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             button.classList.add('active');
             document.getElementById(targetTab).classList.add('active');
+
+            if (targetTab === 'history-tab') {
+                loadRentalHistory();
+            }
         });
     });
 
@@ -33,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function populateFields() {
         const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
 
-        // Fallbacks for both camelCase and snake_case property keys
         const name = savedProfile.name || savedProfile.full_name || '';
         const email = savedProfile.email || '';
         const phone = savedProfile.phone || savedProfile.mobile || '';
@@ -80,6 +85,50 @@ document.addEventListener('DOMContentLoaded', () => {
             if (inputEmail) inputEmail.value = email;
             if (inputPhone) inputPhone.value = phone;
             if (inputAddress) inputAddress.value = address;
+        }
+    }
+
+    // Load Live Rental History from Render Database
+    async function loadRentalHistory() {
+        const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
+        const historyContainer = document.querySelector('#history-tab .history-list');
+
+        if (!savedProfile.email || !historyContainer) return;
+
+        historyContainer.innerHTML = '<p style="color: #666;">Fetching your rental history...</p>';
+
+        try {
+            const res = await fetch(`${API_URL}/bookings/${encodeURIComponent(savedProfile.email)}`);
+            const data = await res.json();
+
+            if (res.ok && data.success && data.bookings.length > 0) {
+                historyContainer.innerHTML = '';
+                data.bookings.forEach(booking => {
+                    const itemsList = booking.items.map(item => `${item.name} (x${item.quantity})`).join(', ');
+                    const formattedDate = new Date(booking.startDate).toLocaleDateString('en-ZA', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+
+                    historyContainer.innerHTML += `
+                        <div class="history-card" style="margin-bottom: 1rem; padding: 1.25rem; border: 1px solid #e0e0e0; border-radius: 6px; background-color: #fafafa;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <span class="booking-id" style="font-weight: bold; color: #111;">Booking #JK-${booking.id}</span>
+                                <strong style="color: #111;">R${parseFloat(booking.grandTotal).toLocaleString()}</strong>
+                            </div>
+                            <p style="margin: 0.25rem 0; font-size: 0.9rem; color: #333;"><strong>Items:</strong> ${itemsList}</p>
+                            <p style="margin: 0.25rem 0; font-size: 0.85rem; color: #666;"><strong>Start Date:</strong> ${formattedDate} (${booking.days} Days)</p>
+                            <p style="margin: 0.25rem 0; font-size: 0.85rem; color: #666;"><strong>Fulfillment:</strong> ${booking.fulfillmentType === 'delivery' ? `Delivery (${booking.deliveryZone})` : 'Self Collection'}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                historyContainer.innerHTML = '<p style="color: #666;">No previous bookings or rental requests found.</p>';
+            }
+        } catch (err) {
+            console.error('History fetch error:', err);
+            historyContainer.innerHTML = '<p style="color: #c62828;">Unable to load rental history right now.</p>';
         }
     }
 

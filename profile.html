@@ -23,11 +23,9 @@
                 <span class="bar"></span>
             </button>
             <ul class="nav-links" id="navLinks">
-                <!-- Signed-Out Only Navigation -->
                 <li class="logged-out-only"><a href="index.html">Home</a></li>
                 <li class="logged-out-only"><a href="signin.html" class="auth-btn">Sign In</a></li>
 
-                <!-- Signed-In Only Navigation -->
                 <li class="logged-in-only"><a href="index.html">Home</a></li>
                 <li class="logged-in-only"><a href="about.html">About</a></li>
                 <li class="logged-in-only"><a href="services/services.html">Services</a></li>
@@ -62,7 +60,6 @@
                     <li><button class="tab-btn" data-tab="history-tab">Rental History</button></li>
                 </ul>
 
-                <!-- Primary Sign Out Button -->
                 <div class="sidebar-footer">
                     <button id="sidebarSignOutBtn" class="signout-btn">Sign Out</button>
                 </div>
@@ -109,7 +106,6 @@
                             <textarea id="profileAddress" rows="3" readonly class="editable-field" placeholder="Enter your delivery or physical address..."></textarea>
                         </div>
 
-                        <!-- Action Controls (Hidden until Edit is clicked) -->
                         <div id="formActionButtons" class="form-action-group" style="display: none;">
                             <button type="button" id="discardChangesBtn" class="action-btn cancel-btn">Discard Changes</button>
                             <button type="submit" id="saveChangesBtn" class="action-btn save-btn">Save Changes</button>
@@ -137,14 +133,11 @@
                     </form>
                 </div>
 
-                <!-- Tab 3: Rental History -->
+                <!-- Tab 3: Dynamic Rental History -->
                 <div class="tab-pane" id="history-tab">
                     <h2>Recent Bookings & Requests</h2>
                     <div class="history-list">
-                        <div class="history-card">
-                            <span class="booking-id">Booking #JK-8492</span>
-                            <p>1-Ton Single Cab Bakkie - Active Rental</p>
-                        </div>
+                        <!-- Loaded dynamically via scripts/profile.js -->
                     </div>
                 </div>
 

@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
+
     // Mobile Menu Navigation Toggle
     const menuToggle = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
@@ -35,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
         autofillProfileBtn.addEventListener('click', populateCustomerFromProfile);
     }
 
-    // Set default start date to tomorrow
     const startDateInput = document.getElementById('startDate');
     if (startDateInput) {
         const tomorrow = new Date();
@@ -84,16 +85,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const outOfRadiusNotice = document.getElementById('outOfRadiusNotice');
     const checkoutSubmitBtn = document.getElementById('checkoutSubmitBtn');
 
+    let calculatedDeliveryFee = 0;
+    let calculatedGrandTotal = 0;
+
     function calculateTotals() {
-        let fulfillmentFee = 0;
         let isOutOfRadius = false;
+        calculatedDeliveryFee = 0;
 
         if (fulfillmentType && fulfillmentType.value === 'delivery') {
             if (deliveryFields) deliveryFields.style.display = 'block';
 
             const selectedOption = deliveryZone.options[deliveryZone.selectedIndex];
             const zoneValue = selectedOption.value;
-            fulfillmentFee = parseFloat(selectedOption.dataset.fee) || 0;
+            calculatedDeliveryFee = parseFloat(selectedOption.dataset.fee) || 0;
 
             if (zoneValue === 'out-of-radius') {
                 isOutOfRadius = true;
@@ -122,12 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const itemsSubtotal = bookingData.itemsSubtotal || 0;
-        const grandTotal = itemsSubtotal + fulfillmentFee;
+        calculatedGrandTotal = itemsSubtotal + calculatedDeliveryFee;
 
         if (summaryFulfillmentFee) {
-            summaryFulfillmentFee.textContent = isOutOfRadius ? 'N/A (Collection Required)' : `R${fulfillmentFee.toLocaleString()}`;
+            summaryFulfillmentFee.textContent = isOutOfRadius ? 'N/A (Collection Required)' : `R${calculatedDeliveryFee.toLocaleString()}`;
         }
-        if (summaryGrandTotal) summaryGrandTotal.textContent = `R${grandTotal.toLocaleString()}`;
+        if (summaryGrandTotal) summaryGrandTotal.textContent = `R${calculatedGrandTotal.toLocaleString()}`;
     }
 
     if (fulfillmentType) fulfillmentType.addEventListener('change', calculateTotals);
@@ -135,19 +139,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calculateTotals();
 
-    // Form Submission
+    // Submit Booking to Live PostgreSQL Server
     const checkoutForm = document.getElementById('checkoutForm');
     const checkoutFeedback = document.getElementById('checkoutFeedback');
 
     if (checkoutForm) {
-        checkoutForm.addEventListener('submit', (e) => {
+        checkoutForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (checkoutFeedback) {
-                checkoutFeedback.textContent = 'Thank you! Your booking application and contact details have been submitted.';
-                checkoutFeedback.className = 'form-feedback success';
+                checkoutFeedback.textContent = 'Submitting booking application...';
+                checkoutFeedback.className = 'form-feedback';
             }
-            localStorage.removeItem('jkBookingData');
-            checkoutForm.reset();
+
+            const payload = {
+                userEmail: custEmail.value,
+                items: bookingData.items,
+                days: bookingData.days,
+                startDate: document.getElementById('startDate').value,
+                fulfillmentType: fulfillmentType.value,
+                deliveryZone: fulfillmentType.value === 'delivery' ? deliveryZone.value : 'N/A',
+                deliveryAddress: fulfillmentType.value === 'delivery' ? deliveryAddress.value : 'Self Collection',
+                subtotal: bookingData.itemsSubtotal,
+                deliveryFee: calculatedDeliveryFee,
+                grandTotal: calculatedGrandTotal
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/bookings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    if (checkoutFeedback) {
+                        checkoutFeedback.textContent = `Booking #JK-${data.bookingId} confirmed and saved to your history! Redirecting...`;
+                        checkoutFeedback.className = 'form-feedback success';
+                    }
+                    localStorage.removeItem('jkBookingData');
+                    setTimeout(() => {
+                        window.location.href = '../profile.html';
+                    }, 2000);
+                } else {
+                    if (checkoutFeedback) {
+                        checkoutFeedback.textContent = data.error || 'Failed to confirm booking.';
+                        checkoutFeedback.className = 'form-feedback error';
+                    }
+                }
+            } catch (err) {
+                console.error('Booking submission error:', err);
+                if (checkoutFeedback) {
+                    checkoutFeedback.textContent = 'Unable to connect to live database server.';
+                    checkoutFeedback.className = 'form-feedback error';
+                }
+            }
         });
     }
 });

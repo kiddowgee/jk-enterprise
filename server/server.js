@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const app = express();
 
-// Enable CORS for frontend requests
+// Enable CORS for cross-origin requests
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -17,7 +17,7 @@ app.use(express.json());
 // Database Connection
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false } // Required for Render Postgres
+    ssl: { rejectUnauthorized: false }
 });
 
 // Initialize Database Tables
@@ -54,7 +54,7 @@ async function initDb() {
 }
 initDb().catch(console.error);
 
-// Auth Routes - Formatted keys to camelCase for frontend compatibility
+// Auth Routes
 app.post('/api/signup', async (req, res) => {
     const { accountType, name, company, email, phone, password } = req.body;
     try {
@@ -90,7 +90,7 @@ app.post('/api/signin', async (req, res) => {
     }
 });
 
-// Booking Route
+// Create Booking Route
 app.post('/api/bookings', async (req, res) => {
     const { userEmail, items, days, startDate, fulfillmentType, deliveryZone, deliveryAddress, subtotal, deliveryFee, grandTotal } = req.body;
     try {
@@ -103,6 +103,25 @@ app.post('/api/bookings', async (req, res) => {
     } catch (err) {
         console.error('Booking DB error:', err);
         res.status(500).json({ success: false, error: 'Failed to record booking.' });
+    }
+});
+
+// GET Rental/Service History by User Email
+app.get('/api/bookings/:email', async (req, res) => {
+    const userEmail = req.params.email;
+    try {
+        const result = await pool.query(
+            `SELECT id, items, days, start_date AS "startDate", fulfillment_type AS "fulfillmentType", 
+                    delivery_zone AS "deliveryZone", grand_total AS "grandTotal", created_at AS "createdAt"
+             FROM bookings 
+             WHERE user_email = $1 
+             ORDER BY created_at DESC`,
+            [userEmail]
+        );
+        res.json({ success: true, bookings: result.rows });
+    } catch (err) {
+        console.error('Fetch bookings DB error:', err);
+        res.status(500).json({ success: false, error: 'Failed to retrieve rental history.' });
     }
 });
 
