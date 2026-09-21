@@ -266,3 +266,114 @@ app.get('/api/bookings/:email', async (req, res) => {
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Add is_admin column inside initDb()
+async function initDb() {
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                account_type VARCHAR(50),
+                full_name VARCHAR(100),
+                company_name VARCHAR(100),
+                email VARCHAR(100) UNIQUE NOT NULL,
+                phone VARCHAR(20),
+                password VARCHAR(255) NOT NULL,
+                address TEXT,
+                is_admin BOOLEAN DEFAULT FALSE,
+                reset_token VARCHAR(255),
+                reset_token_expiry TIMESTAMP,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE;
+
+            CREATE TABLE IF NOT EXISTS bookings (
+                id SERIAL PRIMARY KEY,
+                user_email VARCHAR(100) REFERENCES users(email),
+                items JSONB NOT NULL,
+                days INT NOT NULL,
+                start_date DATE NOT NULL,
+                fulfillment_type VARCHAR(50),
+                delivery_zone VARCHAR(50),
+                delivery_address TEXT,
+                subtotal NUMERIC,
+                delivery_fee NUMERIC,
+                grand_total NUMERIC,
+                status VARCHAR(50) DEFAULT 'Pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            ALTER TABLE bookings ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'Pending';
+        `);
+        console.log('Database tables and admin schema initialized.');
+    } catch (err) {
+        console.error('Database migration error:', err);
+    }
+}
+
+// -------------------------------------------------------------------------
+// Admin API Endpoints
+// -------------------------------------------------------------------------
+
+// GET Admin Dashboard Analytics & Overview Stats
+app.get('/api/admin/stats', async (req, res) => {
+    try {
+        const totalUsers = await pool.query('SELECT COUNT(*) FROM users');
+        const totalBookings = await pool.query('SELECT COUNT(*) FROM bookings');
+        const revenueResult = await pool.query("SELECT SUM(grand_total) FROM bookings WHERE status != 'Cancelled'");
+        const pendingBookings = await pool.query("SELECT COUNT(*) FROM bookings WHERE status = 'Pending'");
+
+        res.json({
+            success: true,
+            stats: {
+                usersCount: parseInt(totalUsers.rows[0].count) || 0,
+                bookingsCount: parseInt(totalBookings.rows[0].count) || 0,
+                pendingCount: parseInt(pendingBookings.rows[0].count) || 0,
+                totalRevenue: parseFloat(revenueResult.rows[0].sum) || 0
+            }
+        });
+    } catch (err) {
+        console.error('Admin stats error:', err);
+        res.status(500).json({ success: false, error: 'Failed to retrieve analytics.' });
+    }
+});
+
+// GET All Bookings (Admin Management Table)
+app.get('/api/admin/bookings', async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT b.id, b.user_email AS "userEmail", b.items, b.days, 
+                   b.start_date AS "startDate", b.fulfillment_type AS "fulfillmentType", 
+                   b.grand_total AS "grandTotal", b.status, b.created_at AS "createdAt",
+                   u.full_name AS "customerName", u.phone AS "customerPhone"
+            FROM bookings b
+            LEFT JOIN users u ON b.user_email = u.email
+            ORDER BY b.created_at DESC
+        `);
+        res.json({ success: true, bookings: result.rows });
+    } catch (err) {
+        console.error('Fetch all bookings error:', err);
+        res.status(500).json({ success: false, error: 'Failed to retrieve bookings.' });
+    }
+});
+
+// PUT Update Booking Status (Pending -> Approved / Dispatched / Completed / Cancelled)
+app.put('/api/admin/bookings/:id/status', async (req, res) => {
+    const bookingId = req.params.id;
+    const { status } = req.body;
+    try {
+        const result = await pool.query(
+            'UPDATE bookings SET status = $1 WHERE id = $2 RETURNING id, status',
+            [status, bookingId]
+        );
+        if (result.rows.length > 0) {
+            res.json({ success: true, booking: result.rows[0] });
+        } else {
+            res.status(404).json({ success: false, error: 'Booking not found.' });
+        }
+    } catch (err) {
+        console.error('Update booking status error:', err);
+        res.status(500).json({ success: false, error: 'Failed to update booking status.' });
+    }
+});
