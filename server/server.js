@@ -2,7 +2,7 @@ const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
-const crypto = require('crypto'); // Built-in Node module for generating secure tokens
+const crypto = require('crypto');
 require('dotenv').config();
 
 const app = express();
@@ -15,53 +15,56 @@ app.use(cors({
 
 app.use(express.json());
 
-// Database Connection
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
 
-// Initialize Database Tables with Password Reset Support
+// Auto-migrate tables and columns on server startup
 async function initDb() {
-    await pool.query(`
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            account_type VARCHAR(50),
-            full_name VARCHAR(100),
-            company_name VARCHAR(100),
-            email VARCHAR(100) UNIQUE NOT NULL,
-            phone VARCHAR(20),
-            password VARCHAR(255) NOT NULL,
-            address TEXT,
-            reset_token VARCHAR(255),
-            reset_token_expiry TIMESTAMP,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                account_type VARCHAR(50),
+                full_name VARCHAR(100),
+                company_name VARCHAR(100),
+                email VARCHAR(100) UNIQUE NOT NULL,
+                phone VARCHAR(20),
+                password VARCHAR(255) NOT NULL,
+                address TEXT,
+                reset_token VARCHAR(255),
+                reset_token_expiry TIMESTAMP,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
 
-        CREATE TABLE IF NOT EXISTS bookings (
-            id SERIAL PRIMARY KEY,
-            user_email VARCHAR(100) REFERENCES users(email),
-            items JSONB NOT NULL,
-            days INT NOT NULL,
-            start_date DATE NOT NULL,
-            fulfillment_type VARCHAR(50),
-            delivery_zone VARCHAR(50),
-            delivery_address TEXT,
-            subtotal NUMERIC,
-            delivery_fee NUMERIC,
-            grand_total NUMERIC,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-    `);
-    console.log('Database tables initialized successfully.');
+            -- Run safety migrations for existing tables
+            ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255);
+            ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expiry TIMESTAMP;
+
+            CREATE TABLE IF NOT EXISTS bookings (
+                id SERIAL PRIMARY KEY,
+                user_email VARCHAR(100) REFERENCES users(email),
+                items JSONB NOT NULL,
+                days INT NOT NULL,
+                start_date DATE NOT NULL,
+                fulfillment_type VARCHAR(50),
+                delivery_zone VARCHAR(50),
+                delivery_address TEXT,
+                subtotal NUMERIC,
+                delivery_fee NUMERIC,
+                grand_total NUMERIC,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+        console.log('Database tables and reset columns initialized successfully.');
+    } catch (err) {
+        console.error('Database migration error:', err);
+    }
 }
-initDb().catch(console.error);
+initDb();
 
-// -------------------------------------------------------------------------
 // Auth Routes
-// -------------------------------------------------------------------------
-
-// Sign Up
 app.post('/api/signup', async (req, res) => {
     const { accountType, name, company, email, phone, password } = req.body;
     try {
@@ -79,7 +82,6 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
-// Sign In
 app.post('/api/signin', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -108,30 +110,23 @@ app.post('/api/signin', async (req, res) => {
     }
 });
 
-// -------------------------------------------------------------------------
 // Password Reset Routes
-// -------------------------------------------------------------------------
-
-// 1. Request Password Reset Token
 app.post('/api/forgot-password', async (req, res) => {
     const { email } = req.body;
     try {
         const userCheck = await pool.query('SELECT email FROM users WHERE email = $1', [email]);
         if (userCheck.rows.length === 0) {
-            // Return success even if user not found to prevent email enumeration
-            return res.json({ success: true, message: 'If an account exists, a reset link/token has been generated.' });
+            return res.status(404).json({ success: false, error: 'No account found with this email address.' });
         }
 
-        // Generate 32-byte hex token valid for 1 hour
         const token = crypto.randomBytes(32).toString('hex');
-        const expiry = new Date(Date.now() + 3600000); // 1 hour from now
+        const expiry = new Date(Date.now() + 3600000); // 1 hour expiry
 
         await pool.query(
             'UPDATE users SET reset_token = $1, reset_token_expiry = $2 WHERE email = $3',
             [token, expiry, email]
         );
 
-        // In production, send token via Nodemailer/SendGrid. For testing, return token.
         res.json({ 
             success: true, 
             message: 'Reset token generated successfully.',
@@ -143,7 +138,6 @@ app.post('/api/forgot-password', async (req, res) => {
     }
 });
 
-// 2. Submit New Password with Token Verification
 app.post('/api/reset-password', async (req, res) => {
     const { token, newPassword } = req.body;
     try {
@@ -153,7 +147,7 @@ app.post('/api/reset-password', async (req, res) => {
         );
 
         if (result.rows.length === 0) {
-            return res.status(400).json({ success: false, error: 'Invalid or expired reset token.' });
+            return res.status(400).json({ success: false, error: 'Invalid reset token.' });
         }
 
         const user = result.rows[0];
@@ -161,7 +155,6 @@ app.post('/api/reset-password', async (req, res) => {
             return res.status(400).json({ success: false, error: 'Reset token has expired. Please request a new one.' });
         }
 
-        // Hash new password and clear reset token
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         await pool.query(
             'UPDATE users SET password = $1, reset_token = NULL, reset_token_expiry = NULL WHERE email = $2',
@@ -198,7 +191,7 @@ app.put('/api/users/profile', async (req, res) => {
     }
 });
 
-// Create Booking Route
+// Bookings Routes
 app.post('/api/bookings', async (req, res) => {
     const { userEmail, items, days, startDate, fulfillmentType, deliveryZone, deliveryAddress, subtotal, deliveryFee, grandTotal } = req.body;
     try {
@@ -214,7 +207,6 @@ app.post('/api/bookings', async (req, res) => {
     }
 });
 
-// GET Rental/Service History by User Email
 app.get('/api/bookings/:email', async (req, res) => {
     const userEmail = req.params.email;
     try {
