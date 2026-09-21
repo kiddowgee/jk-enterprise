@@ -148,3 +148,24 @@
 .form-feedback.success {
     color: #38a169;
 }
+
+/* Hide logged-in links by default */
+.logged-in-only {
+    display: none !important;
+}
+
+/* Show logged-out links by default */
+.logged-out-only {
+    display: inline-block !important;
+}
+
+/* When user IS logged in */
+html.user-logged-in .logged-in-only,
+body.user-logged-in .logged-in-only {
+    display: inline-block !important;
+}
+
+html.user-logged-in .logged-out-only,
+body.user-logged-in .logged-out-only {
+    display: none !important;
+}
