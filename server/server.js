@@ -2,6 +2,7 @@ const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto'); // Built-in Node module for generating secure tokens
 require('dotenv').config();
 
 const app = express();
@@ -20,7 +21,7 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
-// Initialize Database Tables
+// Initialize Database Tables with Password Reset Support
 async function initDb() {
     await pool.query(`
         CREATE TABLE IF NOT EXISTS users (
@@ -32,6 +33,8 @@ async function initDb() {
             phone VARCHAR(20),
             password VARCHAR(255) NOT NULL,
             address TEXT,
+            reset_token VARCHAR(255),
+            reset_token_expiry TIMESTAMP,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
@@ -54,7 +57,11 @@ async function initDb() {
 }
 initDb().catch(console.error);
 
-// Auth Routes - Sign Up with Hashed Passwords
+// -------------------------------------------------------------------------
+// Auth Routes
+// -------------------------------------------------------------------------
+
+// Sign Up
 app.post('/api/signup', async (req, res) => {
     const { accountType, name, company, email, phone, password } = req.body;
     try {
@@ -72,7 +79,7 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
-// Auth Routes - Sign In with Hashed Password Verification
+// Sign In
 app.post('/api/signin', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -98,6 +105,73 @@ app.post('/api/signin', async (req, res) => {
     } catch (err) {
         console.error('Signin DB error:', err);
         res.status(500).json({ success: false, error: 'Database error.' });
+    }
+});
+
+// -------------------------------------------------------------------------
+// Password Reset Routes
+// -------------------------------------------------------------------------
+
+// 1. Request Password Reset Token
+app.post('/api/forgot-password', async (req, res) => {
+    const { email } = req.body;
+    try {
+        const userCheck = await pool.query('SELECT email FROM users WHERE email = $1', [email]);
+        if (userCheck.rows.length === 0) {
+            // Return success even if user not found to prevent email enumeration
+            return res.json({ success: true, message: 'If an account exists, a reset link/token has been generated.' });
+        }
+
+        // Generate 32-byte hex token valid for 1 hour
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiry = new Date(Date.now() + 3600000); // 1 hour from now
+
+        await pool.query(
+            'UPDATE users SET reset_token = $1, reset_token_expiry = $2 WHERE email = $3',
+            [token, expiry, email]
+        );
+
+        // In production, send token via Nodemailer/SendGrid. For testing, return token.
+        res.json({ 
+            success: true, 
+            message: 'Reset token generated successfully.',
+            resetToken: token 
+        });
+    } catch (err) {
+        console.error('Forgot password error:', err);
+        res.status(500).json({ success: false, error: 'Failed to process request.' });
+    }
+});
+
+// 2. Submit New Password with Token Verification
+app.post('/api/reset-password', async (req, res) => {
+    const { token, newPassword } = req.body;
+    try {
+        const result = await pool.query(
+            'SELECT email, reset_token_expiry FROM users WHERE reset_token = $1',
+            [token]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(400).json({ success: false, error: 'Invalid or expired reset token.' });
+        }
+
+        const user = result.rows[0];
+        if (new Date() > new Date(user.reset_token_expiry)) {
+            return res.status(400).json({ success: false, error: 'Reset token has expired. Please request a new one.' });
+        }
+
+        // Hash new password and clear reset token
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await pool.query(
+            'UPDATE users SET password = $1, reset_token = NULL, reset_token_expiry = NULL WHERE email = $2',
+            [hashedPassword, user.email]
+        );
+
+        res.json({ success: true, message: 'Password updated successfully! You can now sign in.' });
+    } catch (err) {
+        console.error('Reset password error:', err);
+        res.status(500).json({ success: false, error: 'Failed to reset password.' });
     }
 });
 
@@ -160,4 +234,4 @@ app.get('/api/bookings/:email', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));commit
