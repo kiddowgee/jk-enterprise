@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JK Enterprise - Admin Dashboard</title>
+    <title>JK Enterprise - Master Admin Dashboard</title>
     <link rel="stylesheet" href="styles/index.css">
     <style>
         .admin-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
@@ -11,7 +11,7 @@
         .stat-card { background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .stat-card h3 { font-size: 0.875rem; color: #718096; margin-bottom: 0.5rem; text-transform: uppercase; }
         .stat-card p { font-size: 1.75rem; font-weight: 700; color: #1a202c; }
-        .table-card { background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 1.5rem; overflow-x: auto; }
+        .table-card { background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 1.5rem; overflow-x: auto; margin-bottom: 2rem; }
         .admin-table { width: 100%; border-collapse: collapse; text-align: left; }
         .admin-table th, .admin-table td { padding: 0.85rem 1rem; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; }
         .admin-table th { background-color: #f7fafc; color: #4a5568; font-weight: 600; }
@@ -22,6 +22,9 @@
         .badge-dispatched { background-color: #bee3f8; color: #2b6cb0; }
         .badge-completed { background-color: #e2e8f0; color: #2d3748; }
         .badge-cancelled { background-color: #fed7d7; color: #742a2a; }
+        .btn-action { padding: 0.35rem 0.65rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; border: none; cursor: pointer; }
+        .btn-blue { background-color: #2563eb; color: #fff; }
+        .btn-red { background-color: #ef4444; color: #fff; }
     </style>
 </head>
 <body>
@@ -37,7 +40,10 @@
     </header>
 
     <main class="admin-container">
-        <h1 style="margin-bottom: 1.5rem;">Operations Dashboard</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h1>Master Operations & Account Control</h1>
+            <span style="font-size: 0.9rem; color: #4a5568;">Master Admin: <strong>Rethabile Seshabela</strong></span>
+        </div>
 
         <!-- Analytics Stats Bar -->
         <div class="stats-grid">
@@ -59,7 +65,36 @@
             </div>
         </div>
 
-        <!-- Bookings Management Table -->
+        <!-- Section 1: Master User & Admin Account Controls -->
+        <div class="table-card">
+            <h2 style="margin-bottom: 1rem;">System User Accounts & Admin Roles</h2>
+            
+            <form id="addUserForm" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <input type="text" id="newUserName" placeholder="Full Name" required style="flex: 1; padding: 0.6rem; border: 1px solid #cbd5e0; border-radius: 4px;">
+                <input type="email" id="newUserEmail" placeholder="Email Address" required style="flex: 1; padding: 0.6rem; border: 1px solid #cbd5e0; border-radius: 4px;">
+                <select id="newUserRole" style="padding: 0.6rem; border: 1px solid #cbd5e0; border-radius: 4px;">
+                    <option value="user">Standard User</option>
+                    <option value="admin">Admin Privilege</option>
+                </select>
+                <button type="submit" style="background: #111; color: #fff; border: none; padding: 0.6rem 1.25rem; font-weight: bold; border-radius: 4px; cursor: pointer;">Add Account</button>
+            </form>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Account Holder</th>
+                        <th>Email</th>
+                        <th>Current Role</th>
+                        <th>Privilege Controls</th>
+                    </tr>
+                </thead>
+                <tbody id="userManagementTable">
+                    <!-- Dynamic rendering -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 2: Bookings Management Table -->
         <div class="table-card">
             <h2 style="margin-bottom: 1rem;">Customer Rental Orders</h2>
             <table class="admin-table">
@@ -86,10 +121,81 @@
     <script>
         const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
 
+        // Master User Accounts Store
+        let systemUsers = JSON.parse(localStorage.getItem('jkSystemUsers')) || [
+            { id: 1, name: 'Rethabile Seshabela', email: 'rethabileseshabela07@gmail.com', role: 'Master Admin' },
+            { id: 2, name: 'Standard Demo Account', email: 'user@jkenterprise.com', role: 'Standard User' }
+        ];
+
         document.addEventListener('DOMContentLoaded', () => {
             fetchStats();
             fetchBookings();
+            renderUserTable();
+
+            const addUserForm = document.getElementById('addUserForm');
+            if (addUserForm) {
+                addUserForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('newUserName').value;
+                    const email = document.getElementById('newUserEmail').value;
+                    const role = document.getElementById('newUserRole').value === 'admin' ? 'Admin' : 'Standard User';
+
+                    systemUsers.push({ id: Date.now(), name, email, role });
+                    saveAndRenderUsers();
+                    addUserForm.reset();
+                });
+            }
         });
+
+        function saveAndRenderUsers() {
+            localStorage.setItem('jkSystemUsers', JSON.stringify(systemUsers));
+            renderUserTable();
+            document.getElementById('statUsers').textContent = systemUsers.length;
+        }
+
+        function renderUserTable() {
+            const tableBody = document.getElementById('userManagementTable');
+            if (!tableBody) return;
+
+            tableBody.innerHTML = systemUsers.map(user => {
+                const isMaster = user.email.toLowerCase() === 'rethabileseshabela07@gmail.com';
+
+                return `
+                    <tr>
+                        <td><strong>${user.name}</strong></td>
+                        <td>${user.email}</td>
+                        <td><strong>${isMaster ? 'Master Admin' : user.role}</strong></td>
+                        <td>
+                            ${!isMaster ? `
+                                <button onclick="toggleAdminRole('${user.email}')" class="btn-action btn-blue" style="margin-right: 0.5rem;">
+                                    ${user.role === 'Admin' ? 'Demote to User' : 'Promote to Admin'}
+                                </button>
+                                <button onclick="deleteAccount('${user.email}')" class="btn-action btn-red">
+                                    Remove
+                                </button>
+                            ` : '<span style="color: #718096; font-size: 0.85rem;">Master Protected</span>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.toggleAdminRole = (email) => {
+            systemUsers = systemUsers.map(u => {
+                if (u.email.toLowerCase() === email.toLowerCase()) {
+                    u.role = u.role === 'Admin' ? 'Standard User' : 'Admin';
+                }
+                return u;
+            });
+            saveAndRenderUsers();
+        };
+
+        window.deleteAccount = (email) => {
+            if (confirm(`Are you sure you want to permanently delete ${email}?`)) {
+                systemUsers = systemUsers.filter(u => u.email.toLowerCase() !== email.toLowerCase());
+                saveAndRenderUsers();
+            }
+        };
 
         async function fetchStats() {
             try {
@@ -99,7 +205,7 @@
                     document.getElementById('statRevenue').textContent = `R ${data.stats.totalRevenue.toFixed(2)}`;
                     document.getElementById('statBookings').textContent = data.stats.bookingsCount;
                     document.getElementById('statPending').textContent = data.stats.pendingCount;
-                    document.getElementById('statUsers').textContent = data.stats.usersCount;
+                    document.getElementById('statUsers').textContent = Math.max(data.stats.usersCount, systemUsers.length);
                 }
             } catch (err) {
                 console.error('Failed to load admin stats:', err);

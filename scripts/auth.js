@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 2. Check Auth State and Set Body Classes for CSS
+    // 2. Check Auth State & Flag Master Admin
     // -------------------------------------------------------------------------
     function checkAuthState() {
         const savedProfile = localStorage.getItem('jkUserProfile');
@@ -31,12 +31,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const user = JSON.parse(savedProfile);
+                
+                // Master Admin check for Rethabile Seshabela
+                const isMasterAdmin = user.email && user.email.toLowerCase() === 'rethabileseshabela07@gmail.com';
+                const isAdmin = isMasterAdmin || user.isAdmin || user.is_admin;
+
                 const name = user.name || user.full_name || 'User';
                 const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
                 const headerAvatar = document.getElementById('headerAvatar');
                 if (headerAvatar) headerAvatar.textContent = initials.slice(0, 2);
 
-                if (user.isAdmin || user.is_admin) {
+                if (isAdmin) {
                     document.body.classList.add('is-admin');
                 } else {
                     document.body.classList.remove('is-admin');
@@ -107,8 +112,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Helper: Construct Profile Object & Assign Master Admin Status
+    function saveProfileWithMasterStatus(userData) {
+        const isMaster = userData.email && userData.email.toLowerCase() === 'rethabileseshabela07@gmail.com';
+        
+        const fullProfile = {
+            ...userData,
+            isAdmin: isMaster || userData.isAdmin || userData.is_admin || false,
+            isMasterAdmin: isMaster
+        };
+
+        localStorage.setItem('jkUserProfile', JSON.stringify(fullProfile));
+    }
+
     // -------------------------------------------------------------------------
-    // 5. Handle Sign In Submission (Redirects to index.html)
+    // 5. Handle Sign In Submission
     // -------------------------------------------------------------------------
     if (signInForm) {
         signInForm.addEventListener('submit', async (e) => {
@@ -131,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
 
                 if (res.ok && data.success) {
-                    localStorage.setItem('jkUserProfile', JSON.stringify(data.user));
+                    saveProfileWithMasterStatus(data.user);
                     if (authFeedback) {
                         authFeedback.textContent = 'Sign in successful! Redirecting to home...';
                         authFeedback.className = 'form-feedback success';
@@ -154,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 6. Handle Sign Up Submission (Redirects to index.html)
+    // 6. Handle Sign Up Submission
     // -------------------------------------------------------------------------
     if (signUpForm) {
         signUpForm.addEventListener('submit', async (e) => {
@@ -183,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
 
                 if (res.ok && data.success) {
-                    localStorage.setItem('jkUserProfile', JSON.stringify(data.user));
+                    saveProfileWithMasterStatus(data.user);
                     if (authFeedback) {
                         authFeedback.textContent = 'Account created successfully! Redirecting to home...';
                         authFeedback.className = 'form-feedback success';
