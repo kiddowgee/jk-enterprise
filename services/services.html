@@ -30,6 +30,7 @@
                 <li class="logged-in-only"><a href="../about.html">About</a></li>
                 <li class="logged-in-only"><a href="services.html" class="active">Services</a></li>
                 <li class="logged-in-only"><a href="../contact.html">Contact</a></li>
+                <li class="admin-only"><a href="../admin.html" style="color: #e53e3e; font-weight: bold;">Admin Panel</a></li>
                 <li class="logged-in-only">
                     <a href="../profile.html" class="profile-nav-link" aria-label="User Profile">
                         <div class="nav-avatar" id="headerAvatar">JD</div>
@@ -113,9 +114,9 @@
                             </div>
                         </div>
                         
-                       <a href="booking-confirm.html" class="btn-rent-action" style="background: #111; color: #fff; padding: 0.75rem 1.25rem; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
-    Rent Mobile Facilities
-</a>
+                        <a href="booking-confirm.html" class="btn-rent-action">
+                            Rent Mobile Facilities
+                        </a>
                     </div>
                 </div>
             </article>
@@ -157,9 +158,9 @@
                             <p>To hire a bakkie or trailer, renters must present driver's license, SA ID, proof of residence, and a security deposit.</p>
                         </div>
 
-                       <a href="booking-confirm.html" class="btn-rent-action" style="background: #111; color: #fff; padding: 0.75rem 1.25rem; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
-    Rent Bakkie / Trailer
-</a>
+                        <a href="booking-confirm.html" class="btn-rent-action">
+                            Rent Bakkie / Trailer
+                        </a>
                     </div>
                 </div>
             </article>
@@ -180,19 +181,20 @@
             </div>
         </div>
     </footer>
-   <!-- Sign In Interceptor Modal -->
-<div id="authModal" class="modal-overlay" style="display: none;">
-    <div class="modal-card">
-        <h3>Sign In Required</h3>
-        <p>You need to be signed in to proceed with bookings or rental services. Would you like to sign in now?</p>
-        <div class="modal-actions">
-            <button id="modalCancel" class="modal-btn cancel">Cancel</button>
-            <button id="modalConfirm" class="modal-btn confirm">Sign In</button>
+
+    <!-- Sign In Interceptor Modal -->
+    <div id="authModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <h3>Sign In Required</h3>
+            <p>You need to be signed in to proceed with bookings or rental services. Would you like to sign in now?</p>
+            <div class="modal-actions">
+                <button id="modalCancel" class="modal-btn cancel">Cancel</button>
+                <button id="modalConfirm" class="modal-btn confirm">Sign In</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="../scripts/auth.js"></script>
-<script src="../scripts/services.js"></script>
- 
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/services.js"></script>
+</body>
 </html>

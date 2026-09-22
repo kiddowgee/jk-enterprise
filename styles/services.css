@@ -459,3 +459,52 @@ body.user-logged-in .logged-out-only,
 html.user-logged-in .logged-out-only {
     display: none !important;
 }
+
+/* Drawer Accordion Styles */
+.service-details-drawer {
+    display: none;
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.service-details-drawer.is-open {
+    display: block !important;
+}
+
+.btn-rent-action {
+    background: #111111;
+    color: #ffffff;
+    padding: 0.75rem 1.25rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 1.5rem;
+}
+
+.btn-rent-action:hover {
+    background: #1a202c;
+}
+
+/* Nav Visibility Rules */
+.logged-in-only,
+.admin-only {
+    display: none !important;
+}
+
+.logged-out-only {
+    display: list-item !important;
+}
+
+body.user-logged-in .logged-out-only {
+    display: none !important;
+}
+
+body.user-logged-in .logged-in-only {
+    display: list-item !important;
+}
+
+body.is-admin .admin-only {
+    display: list-item !important;
+}
