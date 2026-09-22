@@ -133,3 +133,75 @@ header {
         margin: 0.5rem 0;
     }
 }
+
+/* --- Navigation Auth State Visibility Rules --- */
+
+/* By default (signed out): Hide signed-in elements, show signed-out elements */
+.logged-in-only,
+.admin-only {
+    display: none !important;
+}
+
+.logged-out-only {
+    display: list-item !important;
+}
+
+/* When Signed In (body has .user-logged-in class) */
+body.user-logged-in .logged-out-only {
+    display: none !important;
+}
+
+body.user-logged-in .logged-in-only {
+    display: list-item !important;
+}
+
+/* Admin Panel (visible only when body has .is-admin class) */
+body.is-admin .admin-only {
+    display: list-item !important;
+}
+
+/* Mobile Drawer Styles */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 28px;
+        height: 20px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1001;
+    }
+
+    .menu-toggle .bar {
+        height: 3px;
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 4px;
+    }
+
+    .nav-links {
+        display: none !important;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #1a202c;
+        padding: 1.5rem 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+    }
+
+    .nav-links.active {
+        display: flex !important;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+        margin: 0.5rem 0;
+    }
+}

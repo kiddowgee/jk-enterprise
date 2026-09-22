@@ -23,29 +23,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Check Authentication State and Apply CSS Visibility Classes
     // -------------------------------------------------------------------------
     function checkAuthState() {
-        const savedProfile = localStorage.getItem('jkUserProfile');
-        const isLoggedIn = savedProfile && savedProfile !== '{}';
+    const savedProfile = localStorage.getItem('jkUserProfile');
+    const isLoggedIn = savedProfile && savedProfile !== '{}';
 
-        if (isLoggedIn) {
-            document.documentElement.classList.add('user-logged-in');
-            document.body.classList.add('user-logged-in');
+    if (isLoggedIn) {
+        document.body.classList.add('user-logged-in');
 
-            try {
-                const user = JSON.parse(savedProfile);
-                const name = user.name || user.full_name || 'User';
-                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-                const headerAvatar = document.getElementById('headerAvatar');
-                if (headerAvatar) headerAvatar.textContent = initials.slice(0, 2);
-            } catch (err) {
-                console.error('Error parsing profile session:', err);
+        try {
+            const user = JSON.parse(savedProfile);
+            const name = user.name || user.full_name || 'User';
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+            const headerAvatar = document.getElementById('headerAvatar');
+            if (headerAvatar) headerAvatar.textContent = initials.slice(0, 2);
+
+            // Toggle admin visibility class
+            if (user.isAdmin || user.is_admin) {
+                document.body.classList.add('is-admin');
+            } else {
+                document.body.classList.remove('is-admin');
             }
-        } else {
-            document.documentElement.classList.remove('user-logged-in');
-            document.body.classList.remove('user-logged-in');
+        } catch (err) {
+            console.error('Error parsing profile session:', err);
         }
+    } else {
+        document.body.classList.remove('user-logged-in');
+        document.body.classList.remove('is-admin');
     }
-
-    checkAuthState();
+}
 
     // -------------------------------------------------------------------------
     // 3. Sign Out Action
