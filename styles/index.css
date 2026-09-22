@@ -1,5 +1,5 @@
 /* ==========================================================================
-   JK Enterprise - Exact Light/Dark Hybrid Master Color Palette
+   JK Enterprise - Master Color Palette & Global Layout
    ========================================================================== */
 :root {
     --bg-header: #111111;         /* Pure Dark Charcoal Header */
@@ -53,6 +53,7 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     padding: 1.25rem 1.5rem;
+    position: relative; /* Context parent for absolute mobile dropdown */
 }
 
 .logo a {
@@ -137,7 +138,7 @@ body.is-admin .admin-only {
     display: list-item !important;
 }
 
-/* Hero Section (Matches Screenshot Exactly) */
+/* Hero Section */
 .hero {
     background-color: var(--bg-hero);
     color: var(--text-hero-title);
@@ -180,7 +181,7 @@ body.is-admin .admin-only {
     background-color: var(--btn-cta-hover);
 }
 
-/* Who We Are & Content Sections */
+/* Content Sections */
 .about-summary {
     max-width: 850px;
     margin: 4rem auto 2rem;
@@ -201,7 +202,7 @@ body.is-admin .admin-only {
     line-height: 1.8;
 }
 
-/* Services Highlights Grid */
+/* Highlights Grid */
 .highlights {
     max-width: 1200px;
     margin: 3rem auto 5rem;
@@ -301,23 +302,25 @@ footer {
         display: flex !important;
     }
 
-    .nav-links {
+    .navbar .nav-links {
         display: none !important;
-        flex-direction: column;
+        flex-direction: column !important;
         position: absolute;
         top: 100%;
         left: 0;
         width: 100%;
         background-color: var(--bg-header);
         padding: 1.5rem 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+        border-top: 1px solid #222222;
     }
 
-    .nav-links.active {
+    .navbar .nav-links.active {
         display: flex !important;
     }
 
-    .nav-links li {
+    .navbar .nav-links li {
         width: 100%;
         text-align: center;
         margin: 0.5rem 0;
