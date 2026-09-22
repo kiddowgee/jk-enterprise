@@ -1,3 +1,25 @@
+/* ==========================================================================
+   JK Enterprise - Exact Light/Dark Hybrid Master Color Palette
+   ========================================================================== */
+:root {
+    --bg-header: #111111;         /* Pure Dark Charcoal Header */
+    --bg-hero: #222222;           /* Dark Hero Banner */
+    --bg-body: #f4f4f4;           /* Light Off-White Content Area */
+    --bg-card: #ffffff;           /* Clean White Card Backgrounds */
+    --border-color: #e2e8f0;      /* Subtle Light Gray Borders */
+
+    --text-hero-title: #ffffff;   /* Pure White Hero Heading */
+    --text-hero-sub: #d1d5db;     /* Light Gray Subtitle */
+    --text-body-heading: #111111; /* Dark Headings */
+    --text-body-main: #333333;    /* Main Body Text */
+
+    --btn-cta-bg: #ffffff;        /* Solid White CTA Button */
+    --btn-cta-text: #111111;      /* Dark Text inside White Button */
+    --btn-cta-hover: #e5e7eb;     /* Soft Light Gray Hover State */
+    
+    --accent-blue: #2563eb;       /* Link Highlights */
+}
+
 /* Base Resets */
 * {
     margin: 0;
@@ -6,10 +28,10 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     line-height: 1.6;
-    color: #2d3748;
-    background-color: #f7fafc;
+    color: var(--text-body-main);
+    background-color: var(--bg-body);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -17,12 +39,11 @@ body {
 
 /* Header & Navigation Bar */
 header {
-    background-color: #1a202c;
+    background-color: var(--bg-header);
     color: #ffffff;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .navbar {
@@ -31,12 +52,12 @@ header {
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem 1.5rem;
+    padding: 1.25rem 1.5rem;
 }
 
 .logo a {
     color: #ffffff;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     text-decoration: none;
     letter-spacing: 0.5px;
@@ -45,15 +66,15 @@ header {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 1.5rem;
+    gap: 1.75rem;
     align-items: center;
 }
 
 .nav-links a {
-    color: #e2e8f0;
+    color: #e5e7eb;
     text-decoration: none;
-    font-weight: 500;
     font-size: 0.95rem;
+    font-weight: 500;
     transition: color 0.2s ease;
 }
 
@@ -62,9 +83,9 @@ header {
 }
 
 .nav-avatar {
-    width: 36px;
-    height: 36px;
-    background-color: #3182ce;
+    width: 34px;
+    height: 34px;
+    background-color: #3b82f6;
     color: #ffffff;
     border-radius: 50%;
     display: flex;
@@ -94,9 +115,7 @@ header {
     border-radius: 2px;
 }
 
-/* -------------------------------------------------------------------------
-   Strict Authentication State Visibility Rules
-   ------------------------------------------------------------------------- */
+/* Strict Auth Visibility Rules */
 .logged-in-only,
 .admin-only {
     display: none !important;
@@ -118,12 +137,12 @@ body.is-admin .admin-only {
     display: list-item !important;
 }
 
-/* Hero Section */
+/* Hero Section (Matches Screenshot Exactly) */
 .hero {
-    background: linear-gradient(rgba(26, 32, 44, 0.85), rgba(26, 32, 44, 0.85)), url('https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
-    color: #ffffff;
+    background-color: var(--bg-hero);
+    color: var(--text-hero-title);
     text-align: center;
-    padding: 6rem 1.5rem;
+    padding: 5rem 1.5rem;
 }
 
 .hero-content {
@@ -132,36 +151,36 @@ body.is-admin .admin-only {
 }
 
 .hero h1 {
-    font-size: 2.75rem;
-    font-weight: 800;
+    font-size: 2.5rem;
+    font-weight: 700;
     margin-bottom: 1.25rem;
-    line-height: 1.2;
+    color: var(--text-hero-title);
+    line-height: 1.25;
 }
 
 .hero p {
-    font-size: 1.2rem;
-    color: #e2e8f0;
-    margin-bottom: 2rem;
+    font-size: 1.15rem;
+    color: var(--text-hero-sub);
+    margin-bottom: 2.25rem;
     line-height: 1.6;
 }
 
-.cta-button {
-    background-color: #3182ce;
-    color: #ffffff;
-    padding: 0.85rem 2rem;
+.cta-button, .btn-primary {
+    background-color: var(--btn-cta-bg);
+    color: var(--btn-cta-text);
+    padding: 0.75rem 1.75rem;
     text-decoration: none;
     font-weight: 600;
-    border-radius: 6px;
+    border-radius: 4px;
     display: inline-block;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition: background-color 0.2s ease;
 }
 
-.cta-button:hover {
-    background-color: #2b6cb0;
-    transform: translateY(-1px);
+.cta-button:hover, .btn-primary:hover {
+    background-color: var(--btn-cta-hover);
 }
 
-/* About Section */
+/* Who We Are & Content Sections */
 .about-summary {
     max-width: 850px;
     margin: 4rem auto 2rem;
@@ -171,13 +190,14 @@ body.is-admin .admin-only {
 
 .about-summary h2 {
     font-size: 2rem;
-    color: #1a202c;
-    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--text-body-heading);
+    margin-bottom: 1.25rem;
 }
 
 .about-summary p {
-    font-size: 1.1rem;
-    color: #4a5568;
+    font-size: 1.05rem;
+    color: var(--text-body-main);
     line-height: 1.8;
 }
 
@@ -191,7 +211,8 @@ body.is-admin .admin-only {
 .highlights h2 {
     text-align: center;
     font-size: 2rem;
-    color: #1a202c;
+    font-weight: 700;
+    color: var(--text-body-heading);
     margin-bottom: 2.5rem;
 }
 
@@ -202,52 +223,47 @@ body.is-admin .admin-only {
 }
 
 .card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 2rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .card h3 {
-    font-size: 1.3rem;
-    color: #1a202c;
+    font-size: 1.25rem;
+    color: var(--text-body-heading);
     margin-bottom: 0.75rem;
 }
 
 .card p {
-    color: #718096;
+    color: var(--text-body-main);
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
 }
 
 .card-link {
-    color: #3182ce;
+    color: var(--accent-blue);
     font-weight: 600;
     text-decoration: none;
     font-size: 0.95rem;
 }
 
 .card-link:hover {
-    color: #2b6cb0;
+    text-decoration: underline;
 }
 
 /* Footer Section */
 footer {
-    background-color: #1a202c;
-    color: #a0aec0;
+    background-color: var(--bg-body);
+    color: var(--text-body-main);
     margin-top: auto;
     padding: 3rem 1.5rem 1.5rem;
+    border-top: 1px solid var(--border-color);
 }
 
 .footer-content {
@@ -260,8 +276,8 @@ footer {
 }
 
 .footer-info h4 {
-    color: #ffffff;
-    font-size: 1.2rem;
+    color: var(--text-body-heading);
+    font-size: 1.1rem;
     margin-bottom: 0.75rem;
 }
 
@@ -272,14 +288,14 @@ footer {
 
 .footer-copyright {
     width: 100%;
-    border-top: 1px solid #2d3748;
+    border-top: 1px solid var(--border-color);
     margin-top: 2rem;
     padding-top: 1.5rem;
     text-align: center;
     font-size: 0.85rem;
 }
 
-/* Mobile Responsive Overlay */
+/* Mobile Responsive Drawer Overlay */
 @media (max-width: 768px) {
     .menu-toggle {
         display: flex !important;
@@ -292,9 +308,9 @@ footer {
         top: 100%;
         left: 0;
         width: 100%;
-        background-color: #1a202c;
+        background-color: var(--bg-header);
         padding: 1.5rem 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
 
     .nav-links.active {
