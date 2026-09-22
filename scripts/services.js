@@ -44,14 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
             navLinks.classList.toggle('active');
         });
 
-        // Close menu when clicking anywhere outside
         document.addEventListener('click', (e) => {
             if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
                 navLinks.classList.remove('active');
             }
         });
 
-        // Close menu when tapping any link inside
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
@@ -82,31 +80,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } else {
                     parentCard.classList.add('expanded');
-                    btn.innerHTML = 'Hide Details <span class="arrow">&darr;</span>';
+                    btn.innerHTML = 'Hide Details <span class="arrow">&uarr;</span>';
                 }
             }
         });
     });
 
     // -------------------------------------------------------------------------
-    // 3. Intercept Rental Booking Buttons for Unauthenticated Users
+    // 3. Intercept Rental Booking Actions (Shows Pop-up Modal)
     // -------------------------------------------------------------------------
-    const savedProfile = localStorage.getItem('jkUserProfile');
-    const isLoggedIn = savedProfile && savedProfile !== '{}';
-
     const authModal = document.getElementById('authModal');
     const modalCancel = document.getElementById('modalCancel');
     const modalConfirm = document.getElementById('modalConfirm');
 
+    // Select rental buttons inside the expanded content drawers
     const rentalButtons = document.querySelectorAll('.btn-rent-action, .service-cta');
 
     rentalButtons.forEach(button => {
+        // Allow unauthenticated custom quote requests
         if (button.getAttribute('href') === 'quote.html') return;
 
         button.addEventListener('click', (e) => {
+            const savedProfile = localStorage.getItem('jkUserProfile');
+            const isLoggedIn = savedProfile && savedProfile !== '{}';
+
             if (!isLoggedIn) {
+                // Prevent routing to booking-confirm.html
                 e.preventDefault();
 
+                // Open Modal Popup
                 if (authModal) {
                     authModal.style.display = 'flex';
                 } else {
@@ -117,9 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // -------------------------------------------------------------------------
-    // 4. Modal Confirmation Controls
-    // -------------------------------------------------------------------------
+    // Modal Control Handlers
     if (modalCancel) {
         modalCancel.addEventListener('click', () => {
             if (authModal) authModal.style.display = 'none';
