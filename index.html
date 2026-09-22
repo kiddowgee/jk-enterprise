@@ -13,19 +13,22 @@
             <div class="logo">
                 <a href="index.html">JK Enterprise</a>
             </div>
+            
             <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
             </button>
+
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="services.html">Services</a></li>
-                <li><a href="rentals.html">Equipment</a></li>
-                <li><a href="about.html">About Us</a></li>
+                <li><a href="services/services.html">Services</a></li>
+                <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li class="logged-out-only"><a href="signin.html" class="auth-btn">Sign In</a></li>
                 <li class="logged-in-only" style="display: none;"><a href="profile.html">Profile</a></li>
+                <li class="admin-only" style="display: none;"><a href="admin.html" style="color: #e53e3e; font-weight: bold;">Admin Panel</a></li>
+                <li class="logged-in-only" style="display: none;"><a href="#" id="logoutBtn">Sign Out</a></li>
             </ul>
         </nav>
     </header>
@@ -36,7 +39,7 @@
             <div class="hero-content">
                 <h1>Reliable Event & Transport Solutions</h1>
                 <p>From venue setup and mobile refrigeration to bakkie and trailer rentals—JK Enterprise has you covered.</p>
-                <a href="rentals.html" class="btn-primary">Request a Quote</a>
+                <a href="services/services.html" class="btn-primary">Request a Quote</a>
             </div>
         </section>
 
@@ -56,19 +59,19 @@
                 <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.03);">
                     <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: #1a202c;">Mobile Cold Rooms</h3>
                     <p style="color: #718096; line-height: 1.6; margin-bottom: 1.5rem;">Keep food, drinks, and perishables fresh at events with our temperature-controlled mobile refrigeration trailers.</p>
-                    <a href="rentals.html" style="color: #2b6cb0; font-weight: bold; text-decoration: none;">View Cold Rooms &rarr;</a>
+                    <a href="services/rent-mobile.html" style="color: #2b6cb0; font-weight: bold; text-decoration: none;">View Cold Rooms &rarr;</a>
                 </div>
 
                 <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.03);">
                     <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: #1a202c;">Bakkie & Trailer Rentals</h3>
                     <p style="color: #718096; line-height: 1.6; margin-bottom: 1.5rem;">Heavy-duty transport equipment including 1-ton bakkies, utility trailers, and car haulers for short or long-term hire.</p>
-                    <a href="rentals.html" style="color: #2b6cb0; font-weight: bold; text-decoration: none;">View Transport Options &rarr;</a>
+                    <a href="services/rent-vehicles.html" style="color: #2b6cb0; font-weight: bold; text-decoration: none;">View Transport Options &rarr;</a>
                 </div>
 
                 <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.03);">
                     <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: #1a202c;">Event Structures & Setup</h3>
                     <p style="color: #718096; line-height: 1.6; margin-bottom: 1.5rem;">Frame tents, stretch tents, tables, chairs, and sound equipment delivered and set up on-site for your function.</p>
-                    <a href="rentals.html" style="color: #2b6cb0; font-weight: bold; text-decoration: none;">Explore Event Gear &rarr;</a>
+                    <a href="services/services.html" style="color: #2b6cb0; font-weight: bold; text-decoration: none;">Explore Event Gear &rarr;</a>
                 </div>
 
             </div>
@@ -79,7 +82,7 @@
             <div style="max-width: 800px; margin: 0 auto;">
                 <h2 style="font-size: 2rem; margin-bottom: 1rem;">Ready to Book Equipment for Your Event?</h2>
                 <p style="font-size: 1.1rem; color: #cbd5e0; margin-bottom: 2rem;">Get an instant quote online or contact our logistics team for custom transport and event setup packages.</p>
-                <a href="rentals.html" class="btn-primary" style="background: #ffffff; color: #1a202c; padding: 0.85rem 2rem; text-decoration: none; font-weight: bold; border-radius: 4px; display: inline-block;">Browse Catalog</a>
+                <a href="services/services.html" class="btn-primary" style="background: #ffffff; color: #1a202c; padding: 0.85rem 2rem; text-decoration: none; font-weight: bold; border-radius: 4px; display: inline-block;">Browse Catalog</a>
             </div>
         </section>
     </main>
@@ -95,15 +98,13 @@
                 <h4 style="color: #fff; font-size: 1rem; margin-bottom: 1rem;">Quick Links</h4>
                 <ul style="list-style: none; font-size: 0.9rem; line-height: 2;">
                     <li><a href="index.html" style="color: #9ca3af; text-decoration: none;">Home</a></li>
-                    <li><a href="services.html" style="color: #9ca3af; text-decoration: none;">Services</a></li>
-                    <li><a href="rentals.html" style="color: #9ca3af; text-decoration: none;">Equipment Catalog</a></li>
-                    <li><a href="about.html" style="color: #9ca3af; text-decoration: none;">About Us</a></li>
+                    <li><a href="services/services.html" style="color: #9ca3af; text-decoration: none;">Services Catalog</a></li>
+                    <li><a href="contact.html" style="color: #9ca3af; text-decoration: none;">Contact Us</a></li>
                 </ul>
             </div>
             <div>
                 <h4 style="color: #fff; font-size: 1rem; margin-bottom: 1rem;">Contact Info</h4>
                 <p style="font-size: 0.9rem; line-height: 1.8;">Email: info@jkenterprise.com</p>
-                <p style="font-size: 0.9rem; line-height: 1.8;">Phone: (123) 456-7890</p>
                 <p style="font-size: 0.9rem; line-height: 1.8;">Location: South Africa</p>
             </div>
         </div>
@@ -112,32 +113,7 @@
         </div>
     </footer>
 
-    <!-- Mobile Navigation Toggle Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const menuToggle = document.getElementById('menuToggle');
-            const navLinks = document.getElementById('navLinks');
-
-            if (menuToggle && navLinks) {
-                menuToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    navLinks.classList.toggle('active');
-                });
-
-                document.addEventListener('click', (e) => {
-                    if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
-                        navLinks.classList.remove('active');
-                    }
-                });
-            }
-
-            // Check sign-in state to toggle Profile link
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-                document.querySelectorAll('.logged-out-only').forEach(el => el.style.display = 'none');
-                document.querySelectorAll('.logged-in-only').forEach(el => el.style.display = 'block');
-            }
-        });
-    </script>
+    <!-- Script File Linked to Your Repository Structure -->
+    <script src="scripts/index.js"></script>
 </body>
 </html>
