@@ -44,14 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
             navLinks.classList.toggle('active');
         });
 
-        // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
                 navLinks.classList.remove('active');
             }
         });
 
-        // Close menu when clicking any nav link
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
@@ -67,15 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             const parentCard = btn.closest('.service-card');
-            const drawer = parentCard ? parentCard.querySelector('.service-details-drawer') : null;
 
-            if (drawer) {
-                const isCurrentlyOpen = drawer.classList.contains('active') || drawer.style.display === 'block';
+            if (parentCard) {
+                const isExpanded = parentCard.classList.contains('expanded');
 
-                if (isCurrentlyOpen) {
-                    drawer.classList.remove('active');
-                    drawer.style.display = 'none';
-                    
+                if (isExpanded) {
+                    parentCard.classList.remove('expanded');
                     if (parentCard.id === 'mobile-rentals') {
                         btn.innerHTML = 'View Fleet & Rates <span class="arrow">&darr;</span>';
                     } else if (parentCard.id === 'vehicle-rentals') {
@@ -84,9 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         btn.innerHTML = 'View Details <span class="arrow">&darr;</span>';
                     }
                 } else {
-                    drawer.classList.add('active');
-                    drawer.style.display = 'block';
-                    btn.innerHTML = 'Hide Details <span class="arrow">&uarr;</span>';
+                    parentCard.classList.add('expanded');
+                    btn.innerHTML = 'Hide Details <span class="arrow">&darr;</span>';
                 }
             }
         });

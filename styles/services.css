@@ -53,6 +53,7 @@ header {
     display: flex;
     list-style: none;
     gap: 1.5rem;
+    align-items: center;
 }
 
 .nav-links a {
@@ -67,7 +68,55 @@ header {
     color: #ffffff;
 }
 
-/* Mobile Toggle Button */
+.profile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #111111;
+    font-weight: bold;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+/* ==========================================
+   Navigation Visibility State Rules
+   ========================================== */
+.logged-in-only,
+.admin-only {
+    display: none !important;
+}
+
+.logged-out-only {
+    display: list-item !important;
+}
+
+body.user-logged-in .logged-out-only {
+    display: none !important;
+}
+
+body.user-logged-in .logged-in-only {
+    display: list-item !important;
+}
+
+body.is-admin .admin-only {
+    display: list-item !important;
+}
+
+/* ==========================================
+   Mobile Navigation Menu Drawer
+   ========================================== */
 .menu-toggle {
     display: none;
     flex-direction: column;
@@ -82,7 +131,7 @@ header {
     height: 2px;
     background-color: #ffffff;
 }
-/* Mobile Navigation Menu Drawer */
+
 @media (max-width: 768px) {
     .menu-toggle {
         display: flex !important;
@@ -117,7 +166,6 @@ header {
         z-index: 1000;
     }
 
-    /* Active Class toggled by scripts/services.js */
     .nav-links.active {
         display: flex !important;
     }
@@ -152,7 +200,7 @@ header {
 }
 
 /* ==========================================
-   Services Section & Animated Expandable Cards
+   Services Section & Expandable Cards
    ========================================== */
 .services-container {
     max-width: 1100px;
@@ -220,7 +268,7 @@ header {
     transition: transform 0.4s ease;
 }
 
-/* Smooth Accordion Animation via Grid Template Rows */
+/* CSS Grid Template Rows Transition */
 .service-details-drawer {
     display: grid;
     grid-template-rows: 0fr;
@@ -236,7 +284,7 @@ header {
     border-top: 1px solid transparent;
 }
 
-/* Active Expanded State */
+/* Expanded Card Active State */
 .service-card.expanded .service-details-drawer {
     grid-template-rows: 1fr;
 }
@@ -254,7 +302,7 @@ header {
 
 .drawer-content h3 {
     font-size: 1.2rem;
-    color: #111111;
+    color: #111111 !important;
     margin: 1.25rem 0 0.75rem 0;
 }
 
@@ -262,7 +310,14 @@ header {
     margin-top: 0;
 }
 
-/* Spec Cards Grid for Products/Vehicles */
+.drawer-content p,
+.drawer-content li {
+    color: #333333 !important;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Specs & Verification Styling */
 .item-specs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -279,33 +334,28 @@ header {
 
 .spec-card h4 {
     font-size: 1rem;
-    color: #111111;
+    color: #111111 !important;
     margin-bottom: 0.5rem;
 }
 
 .spec-card p {
     font-size: 0.88rem;
-    color: #555555;
+    color: #555555 !important;
     margin-bottom: 0.5rem;
 }
 
 .spec-card .price-text {
-    color: #111111;
+    color: #111111 !important;
     font-size: 0.95rem;
     margin-bottom: 0;
 }
 
-/* Verification Requirements Block */
 .verification-box {
     background-color: #f0f0f0;
     border-left: 4px solid #111111;
     padding: 1.25rem;
     margin: 1.5rem 0;
     border-radius: 0 4px 4px 0;
-}
-
-.verification-box h3 {
-    margin-top: 0;
 }
 
 .service-features {
@@ -319,19 +369,21 @@ header {
     margin-bottom: 0.4rem;
 }
 
-.service-cta {
+.service-cta,
+.btn-rent-action {
     display: inline-block;
     background-color: #111111;
-    color: #ffffff;
-    padding: 0.65rem 1.5rem;
+    color: #ffffff !important;
+    padding: 0.75rem 1.25rem;
     text-decoration: none;
     font-weight: bold;
     font-size: 0.9rem;
     border-radius: 4px;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
 }
 
-.service-cta:hover {
+.service-cta:hover,
+.btn-rent-action:hover {
     background-color: #333333;
 }
 
@@ -363,148 +415,4 @@ footer {
     border-top: 1px solid #333333;
     padding-top: 1.25rem;
     font-size: 0.85rem;
-}
-
-/* ==========================================
-   Responsive Mobile Styling
-   ========================================== */
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: flex;
-    }
-
-    .nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background-color: #111111;
-        padding: 1.5rem 2rem;
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
-
-    .page-header h1 {
-        font-size: 1.8rem;
-    }
-
-    .service-card {
-        padding: 1.5rem;
-    }
-}
-
-/* ==========================================
-   Profile Navigation Avatar Button
-   ========================================== */
-.profile-nav-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    padding: 0;
-}
-
-.nav-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: #ffffff;
-    color: #111111;
-    font-weight: bold;
-    font-size: 0.85rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #ffffff;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.profile-nav-link:hover .nav-avatar,
-.profile-nav-link.active .nav-avatar {
-    border-color: #cccccc;
-    transform: scale(1.05);
-}
-
-/* If using an actual <img> tag instead of initials */
-.nav-avatar-img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ffffff;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.profile-nav-link:hover .nav-avatar-img {
-    border-color: #cccccc;
-    transform: scale(1.05);
-}
-
-/* ==========================================
-   Navigation Visibility States
-   ========================================== */
-
-/* Hide logged-in items by default when NOT logged in */
-body:not(.user-logged-in) .logged-in-only,
-html:not(.user-logged-in) .logged-in-only {
-    display: none !important;
-}
-
-/* Hide logged-out items when logged in */
-body.user-logged-in .logged-out-only,
-html.user-logged-in .logged-out-only {
-    display: none !important;
-}
-
-/* Drawer Accordion Styles */
-.service-details-drawer {
-    display: none;
-    padding-top: 1.5rem;
-    margin-top: 1.5rem;
-    border-top: 1px solid #e2e8f0;
-}
-
-.service-details-drawer.is-open {
-    display: block !important;
-}
-
-.btn-rent-action {
-    background: #111111;
-    color: #ffffff;
-    padding: 0.75rem 1.25rem;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: 1.5rem;
-}
-
-.btn-rent-action:hover {
-    background: #1a202c;
-}
-
-/* Nav Visibility Rules */
-.logged-in-only,
-.admin-only {
-    display: none !important;
-}
-
-.logged-out-only {
-    display: list-item !important;
-}
-
-body.user-logged-in .logged-out-only {
-    display: none !important;
-}
-
-body.user-logged-in .logged-in-only {
-    display: list-item !important;
-}
-
-body.is-admin .admin-only {
-    display: list-item !important;
 }
