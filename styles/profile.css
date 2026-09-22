@@ -12,7 +12,8 @@
 }
 
 /* Sidebar Box */
-.profile-sidebar {
+.profile-sidebar,
+.sidebar-card {
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 6px;
@@ -28,7 +29,8 @@
     margin-bottom: 1.25rem;
 }
 
-.avatar-circle {
+.avatar-circle,
+.user-avatar-circle {
     width: 68px;
     height: 68px;
     background-color: #111111;
@@ -42,19 +44,22 @@
     margin: 0 auto 0.75rem auto;
 }
 
-.user-avatar h3 {
+.user-avatar h3,
+.sidebar-card h3 {
     font-size: 1.1rem;
     color: #111111;
     margin-bottom: 0.2rem;
 }
 
-.user-avatar p {
+.user-avatar p,
+.sidebar-card p {
     font-size: 0.85rem;
     color: #666666;
     margin-bottom: 0.5rem;
 }
 
-.account-badge {
+.account-badge,
+.badge {
     display: inline-block;
     padding: 0.2rem 0.5rem;
     background-color: #f0f0f0;
@@ -66,7 +71,8 @@
     letter-spacing: 0.5px;
 }
 
-.profile-menu {
+.profile-menu,
+.profile-tabs {
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -100,14 +106,36 @@
     font-weight: bold;
 }
 
-/* Sidebar Footer (Sign Out) */
-.sidebar-footer {
+/* Sidebar Footer & Actions (Admin & Sign Out) */
+.sidebar-footer,
+.sidebar-actions {
     margin-top: 1.5rem;
     padding-top: 1rem;
     border-top: 1px solid #eeeeee;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
-.signout-btn {
+.btn-admin-view {
+    width: 100%;
+    background-color: #111111;
+    color: #ffffff;
+    border: none;
+    padding: 0.65rem 1rem;
+    font-weight: bold;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-admin-view:hover {
+    background-color: #333333;
+}
+
+.signout-btn,
+.btn-signout {
     width: 100%;
     background-color: transparent;
     color: #111111;
@@ -120,13 +148,15 @@
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.signout-btn:hover {
+.signout-btn:hover,
+.btn-signout:hover {
     background-color: #111111;
     color: #ffffff;
 }
 
 /* Main Content Panel */
-.profile-content {
+.profile-content,
+.content-card {
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 6px;
@@ -143,7 +173,8 @@
 }
 
 /* Tab Header Flex Box */
-.tab-header-flex {
+.tab-header-flex,
+.pane-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -152,7 +183,8 @@
     border-bottom: 1px solid #eeeeee;
 }
 
-.tab-header-flex h2 {
+.tab-header-flex h2,
+.pane-header h2 {
     font-size: 1.35rem;
     color: #111111;
     margin: 0;
@@ -213,8 +245,10 @@ form.edit-mode .editable-field {
 }
 
 /* Action Buttons */
-.action-btn {
-    padding: 0.5rem 1rem;
+.action-btn,
+.btn-primary,
+.btn-secondary {
+    padding: 0.5.5rem 1rem;
     font-weight: bold;
     font-size: 0.85rem;
     border-radius: 4px;
@@ -222,18 +256,21 @@ form.edit-mode .editable-field {
     transition: all 0.2s ease;
 }
 
-.edit-btn {
+.edit-btn,
+.btn-secondary {
     background-color: transparent;
     border: 1px solid #111111;
     color: #111111;
 }
 
-.edit-btn:hover {
+.edit-btn:hover,
+.btn-secondary:hover {
     background-color: #111111;
     color: #ffffff;
 }
 
-.form-action-group {
+.form-action-group,
+#formActionButtons {
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
@@ -252,15 +289,26 @@ form.edit-mode .editable-field {
     background-color: #e0e0e0;
 }
 
-.save-btn {
+.save-btn,
+.btn-primary {
     background-color: #111111;
     border: 1px solid #111111;
     color: #ffffff;
 }
 
-.save-btn:hover {
+.save-btn:hover,
+.btn-primary:hover {
     background-color: #333333;
 }
+
+.form-feedback {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    font-weight: bold;
+}
+
+.form-feedback.success { color: #2e7d32; }
+.form-feedback.error { color: #c62828; }
 
 /* History Cards */
 .history-list {
@@ -283,7 +331,44 @@ form.edit-mode .editable-field {
     margin-bottom: 0.4rem;
 }
 
-/* Responsive adjustments */
+/* Admin Password Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal-card {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.modal-card h3 {
+    color: #111111;
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    font-weight: bold;
+}
+
+.modal-card p {
+    color: #555555;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .profile-container {
         grid-template-columns: 1fr;
