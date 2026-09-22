@@ -1,55 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ==========================================
-    // Mobile Navigation Toggle
-    // ==========================================
-    const menuToggle = document.getElementById('menuToggle');
-    const navLinks = document.getElementById('navLinks');
+    // Check if user is logged in via localStorage
+    const savedProfile = localStorage.getItem('jkUserProfile');
+    const isLoggedIn = savedProfile && savedProfile !== '{}';
 
-    if (menuToggle && navLinks) {
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            
-            const isExpanded = navLinks.classList.contains('active');
-            menuToggle.setAttribute('aria-expanded', isExpanded);
-        });
+    const authModal = document.getElementById('authModal');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalConfirm = document.getElementById('modalConfirm');
 
-        // Close menu when clicking outside
-        document.addEventListener('click', (event) => {
-            if (!menuToggle.contains(event.target) && !navLinks.contains(event.target)) {
-                navLinks.classList.remove('active');
-                menuToggle.setAttribute('aria-expanded', 'false');
-            }
-        });
+    // Intercept all booking and rental action buttons
+    const rentalButtons = document.querySelectorAll(
+        '.book-now-btn, .rent-now-btn, .proceed-booking-btn, .btn-rent, [data-booking-target]'
+    );
 
-        // Close menu when a navigation link is clicked
-        const links = navLinks.querySelectorAll('a');
-        links.forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                menuToggle.setAttribute('aria-expanded', 'false');
-            });
-        });
-    }
+    rentalButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            if (!isLoggedIn) {
+                // Stop direct navigation to booking execution page
+                e.preventDefault();
 
-    // ==========================================
-    // Animated Expandable Service Cards
-    // ==========================================
-    const detailButtons = document.querySelectorAll('.toggle-details-btn');
-
-    detailButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const card = button.closest('.service-card');
-            const isExpanded = card.classList.contains('expanded');
-
-            // Toggle expanded class
-            card.classList.toggle('expanded');
-
-            // Toggle button label
-            if (isExpanded) {
-                button.innerHTML = 'View Details <span class="arrow">&darr;</span>';
-            } else {
-                button.innerHTML = 'Hide Details <span class="arrow">&darr;</span>';
+                if (authModal) {
+                    authModal.style.display = 'flex';
+                } else {
+                    alert('Sign In Required: Please sign in or register to complete your rental booking.');
+                    window.location.href = '../signin.html';
+                }
             }
         });
     });
+
+    // Handle Modal Actions
+    if (modalCancel) {
+        modalCancel.addEventListener('click', () => {
+            if (authModal) authModal.style.display = 'none';
+        });
+    }
+
+    if (modalConfirm) {
+        modalConfirm.addEventListener('click', () => {
+            window.location.href = '../signin.html';
+        });
+    }
 });
