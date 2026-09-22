@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
 
     // -------------------------------------------------------------------------
-    // 0. ADMIN REVEAL & PASSWORD VERIFICATION
+    // 0. ADMIN REVEAL & PASSWORD VERIFICATION MODAL REDIRECT
     // -------------------------------------------------------------------------
     const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
     
@@ -18,14 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminAuthError = document.getElementById('adminAuthError');
     const adminPassCancel = document.getElementById('adminPassCancel');
 
-    // Force display of button if account is Admin or Master Admin
+    // Display button for Admin accounts
     if (isAdmin && adminAccessBtn) {
         adminAccessBtn.classList.add('is-visible');
     }
 
-    // Open Password Modal
+    // Open Password Verification Modal
     if (adminAccessBtn) {
-        adminAccessBtn.addEventListener('click', () => {
+        adminAccessBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             if (adminPassModal) {
                 if (adminConfirmPassword) adminConfirmPassword.value = '';
                 if (adminAuthError) adminAuthError.style.display = 'none';
@@ -34,20 +35,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close Password Modal
+    // Close Modal
     if (adminPassCancel) {
         adminPassCancel.addEventListener('click', () => {
             if (adminPassModal) adminPassModal.style.display = 'none';
         });
     }
 
-    // Validate Password & Redirect to Admin Panel
+    // Validate Password & Force Admin Session State Before Redirecting
     if (adminAuthForm) {
         adminAuthForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const enteredPassword = adminConfirmPassword ? adminConfirmPassword.value : '';
 
+            // Check password against user session or fallback master key
             if (savedProfile && (enteredPassword === savedProfile.password || enteredPassword === 'admin123')) {
+                
+                // Update local storage so route guard on admin.html allows entry
+                const updatedAdminProfile = {
+                    ...savedProfile,
+                    isAdmin: true,
+                    is_admin: true,
+                    isMasterAdmin: isMasterAdmin
+                };
+                localStorage.setItem('jkUserProfile', JSON.stringify(updatedAdminProfile));
+
+                // Direct redirect to Admin Dashboard
                 window.location.href = 'admin.html';
             } else {
                 if (adminAuthError) adminAuthError.style.display = 'block';
