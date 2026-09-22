@@ -20,36 +20,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 2. Check Authentication State and Apply CSS Visibility Classes
+    // 2. Check Auth State and Set Body Classes for CSS
     // -------------------------------------------------------------------------
     function checkAuthState() {
-    const savedProfile = localStorage.getItem('jkUserProfile');
-    const isLoggedIn = savedProfile && savedProfile !== '{}';
+        const savedProfile = localStorage.getItem('jkUserProfile');
+        const isLoggedIn = savedProfile && savedProfile !== '{}';
 
-    if (isLoggedIn) {
-        document.body.classList.add('user-logged-in');
+        if (isLoggedIn) {
+            document.body.classList.add('user-logged-in');
 
-        try {
-            const user = JSON.parse(savedProfile);
-            const name = user.name || user.full_name || 'User';
-            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-            const headerAvatar = document.getElementById('headerAvatar');
-            if (headerAvatar) headerAvatar.textContent = initials.slice(0, 2);
+            try {
+                const user = JSON.parse(savedProfile);
+                const name = user.name || user.full_name || 'User';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                const headerAvatar = document.getElementById('headerAvatar');
+                if (headerAvatar) headerAvatar.textContent = initials.slice(0, 2);
 
-            // Toggle admin visibility class
-            if (user.isAdmin || user.is_admin) {
-                document.body.classList.add('is-admin');
-            } else {
-                document.body.classList.remove('is-admin');
+                if (user.isAdmin || user.is_admin) {
+                    document.body.classList.add('is-admin');
+                } else {
+                    document.body.classList.remove('is-admin');
+                }
+            } catch (err) {
+                console.error('Error parsing session data:', err);
             }
-        } catch (err) {
-            console.error('Error parsing profile session:', err);
+        } else {
+            document.body.classList.remove('user-logged-in');
+            document.body.classList.remove('is-admin');
         }
-    } else {
-        document.body.classList.remove('user-logged-in');
-        document.body.classList.remove('is-admin');
     }
-}
+
+    checkAuthState();
 
     // -------------------------------------------------------------------------
     // 3. Sign Out Action
@@ -63,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 4. Sign In / Sign Up Form Tab Switching Logic
+    // 4. Tab Switching Logic
     // -------------------------------------------------------------------------
     const tabSignIn = document.getElementById('tabSignIn');
     const tabSignUp = document.getElementById('tabSignUp');
@@ -100,14 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (switchToSignUp) switchToSignUp.addEventListener('click', showSignUp);
     if (switchToSignIn) switchToSignIn.addEventListener('click', showSignIn);
 
-    // Toggle Company Name Field during registration
     if (accountType && companyNameGroup) {
         accountType.addEventListener('change', () => {
-            if (accountType.value === 'business') {
-                companyNameGroup.style.display = 'block';
-            } else {
-                companyNameGroup.style.display = 'none';
-            }
+            companyNameGroup.style.display = (accountType.value === 'business') ? 'block' : 'none';
         });
     }
 

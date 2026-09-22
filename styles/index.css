@@ -94,7 +94,9 @@ header {
     border-radius: 2px;
 }
 
-/* Authentication State Visibility Rules */
+/* -------------------------------------------------------------------------
+   Strict Authentication State Visibility Rules
+   ------------------------------------------------------------------------- */
 .logged-in-only,
 .admin-only {
     display: none !important;
@@ -277,7 +279,7 @@ footer {
     font-size: 0.85rem;
 }
 
-/* Mobile Responsive Drawer Overlay */
+/* Mobile Responsive Overlay */
 @media (max-width: 768px) {
     .menu-toggle {
         display: flex !important;
