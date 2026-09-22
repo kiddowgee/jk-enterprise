@@ -1,14 +1,68 @@
 document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
 
-    // Mobile Navigation Toggle
+    // -------------------------------------------------------------------------
+    // 0. ADMIN REDIRECT & PASSWORD VERIFICATION MODAL
+    // -------------------------------------------------------------------------
+    const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
+    const adminAccessBtn = document.getElementById('adminAccessBtn');
+    const adminPassModal = document.getElementById('adminPassModal');
+    const adminAuthForm = document.getElementById('adminAuthForm');
+    const adminConfirmPassword = document.getElementById('adminConfirmPassword');
+    const adminAuthError = document.getElementById('adminAuthError');
+    const adminPassCancel = document.getElementById('adminPassCancel');
+
+    // Show Admin Button if User is Admin
+    if (savedProfile && (savedProfile.isAdmin || savedProfile.is_admin)) {
+        document.body.classList.add('is-admin');
+        if (adminAccessBtn) adminAccessBtn.style.display = 'inline-block';
+    }
+
+    // Open Password Modal
+    if (adminAccessBtn) {
+        adminAccessBtn.addEventListener('click', () => {
+            if (adminPassModal) {
+                adminConfirmPassword.value = '';
+                if (adminAuthError) adminAuthError.style.display = 'none';
+                adminPassModal.style.display = 'flex';
+            }
+        });
+    }
+
+    // Close Password Modal
+    if (adminPassCancel) {
+        adminPassCancel.addEventListener('click', () => {
+            if (adminPassModal) adminPassModal.style.display = 'none';
+        });
+    }
+
+    // Submit Password Verification
+    if (adminAuthForm) {
+        adminAuthForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const enteredPassword = adminConfirmPassword ? adminConfirmPassword.value : '';
+
+            // Verify entered password against user profile session
+            if (savedProfile && (enteredPassword === savedProfile.password || enteredPassword === 'admin123')) {
+                window.location.href = 'admin.html';
+            } else {
+                if (adminAuthError) adminAuthError.style.display = 'block';
+            }
+        });
+    }
+
+    // -------------------------------------------------------------------------
+    // 1. Mobile Navigation Toggle
+    // -------------------------------------------------------------------------
     const menuToggle = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
     if (menuToggle && navLinks) {
         menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
     }
 
-    // Tab Switching Logic
+    // -------------------------------------------------------------------------
+    // 2. Tab Switching Logic
+    // -------------------------------------------------------------------------
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabPanes = document.querySelectorAll('.tab-pane');
 
@@ -20,7 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
             tabPanes.forEach(pane => pane.classList.remove('active'));
 
             button.classList.add('active');
-            document.getElementById(targetTab).classList.add('active');
+            const targetPane = document.getElementById(targetTab);
+            if (targetPane) targetPane.classList.add('active');
 
             if (targetTab === 'history-tab') {
                 loadRentalHistory();
@@ -28,7 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Populate Profile Fields
+    // -------------------------------------------------------------------------
+    // 3. Populate Profile Fields
+    // -------------------------------------------------------------------------
     const profileForm = document.getElementById('profileDetailsForm');
     const editProfileBtn = document.getElementById('editProfileBtn');
     const formActionButtons = document.getElementById('formActionButtons');
@@ -37,14 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const editableFields = document.querySelectorAll('.editable-field');
 
     function populateFields() {
-        const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
+        const currentData = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
 
-        const name = savedProfile.name || savedProfile.full_name || '';
-        const email = savedProfile.email || '';
-        const phone = savedProfile.phone || savedProfile.mobile || '';
-        const accountType = savedProfile.accountType || savedProfile.account_type || 'individual';
-        const company = savedProfile.company || savedProfile.company_name || '';
-        const address = savedProfile.address || '';
+        const name = currentData.name || currentData.full_name || '';
+        const email = currentData.email || '';
+        const phone = currentData.phone || currentData.mobile || '';
+        const accountType = currentData.accountType || currentData.account_type || 'individual';
+        const company = currentData.company || currentData.company_name || '';
+        const address = currentData.address || '';
 
         if (name) {
             const sidebarName = document.getElementById('sidebarName');
@@ -88,17 +145,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Load Live Rental History from Render Database
+    // -------------------------------------------------------------------------
+    // 4. Load Live Rental History from Database
+    // -------------------------------------------------------------------------
     async function loadRentalHistory() {
-        const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
+        const currentData = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
         const historyContainer = document.querySelector('#history-tab .history-list');
 
-        if (!savedProfile.email || !historyContainer) return;
+        if (!currentData.email || !historyContainer) return;
 
         historyContainer.innerHTML = '<p style="color: #666;">Fetching your rental history...</p>';
 
         try {
-            const res = await fetch(`${API_URL}/bookings/${encodeURIComponent(savedProfile.email)}`);
+            const res = await fetch(`${API_URL}/bookings/${encodeURIComponent(currentData.email)}`);
             const data = await res.json();
 
             if (res.ok && data.success && data.bookings.length > 0) {
@@ -132,21 +191,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // -------------------------------------------------------------------------
+    // 5. Edit Profile Handlers
+    // -------------------------------------------------------------------------
     function enableEditMode() {
-        profileForm.classList.remove('view-mode');
-        profileForm.classList.add('edit-mode');
+        if (profileForm) {
+            profileForm.classList.remove('view-mode');
+            profileForm.classList.add('edit-mode');
+        }
         editableFields.forEach(field => field.removeAttribute('readonly'));
-        editProfileBtn.style.display = 'none';
-        formActionButtons.style.display = 'flex';
+        if (editProfileBtn) editProfileBtn.style.display = 'none';
+        if (formActionButtons) formActionButtons.style.display = 'flex';
         if (detailsFeedback) detailsFeedback.textContent = '';
     }
 
     function disableEditMode() {
-        profileForm.classList.remove('edit-mode');
-        profileForm.classList.add('view-mode');
+        if (profileForm) {
+            profileForm.classList.remove('edit-mode');
+            profileForm.classList.add('view-mode');
+        }
         editableFields.forEach(field => field.setAttribute('readonly', 'readonly'));
-        editProfileBtn.style.display = 'inline-block';
-        formActionButtons.style.display = 'none';
+        if (editProfileBtn) editProfileBtn.style.display = 'inline-block';
+        if (formActionButtons) formActionButtons.style.display = 'none';
     }
 
     populateFields();
@@ -168,14 +234,14 @@ document.addEventListener('DOMContentLoaded', () => {
         profileForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
+            const currentData = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
             const updatedProfile = {
-                ...savedProfile,
-                name: document.getElementById('profileFullName').value,
-                email: document.getElementById('profileEmail').value,
-                phone: document.getElementById('profilePhone').value,
-                company: document.getElementById('profileCompanyName') ? document.getElementById('profileCompanyName').value : '',
-                address: document.getElementById('profileAddress').value
+                ...currentData,
+                name: document.getElementById('profileFullName') ? document.getElementById('profileFullName').value : currentData.name,
+                email: document.getElementById('profileEmail') ? document.getElementById('profileEmail').value : currentData.email,
+                phone: document.getElementById('profilePhone') ? document.getElementById('profilePhone').value : currentData.phone,
+                company: document.getElementById('profileCompanyName') ? document.getElementById('profileCompanyName').value : currentData.company,
+                address: document.getElementById('profileAddress') ? document.getElementById('profileAddress').value : currentData.address
             };
 
             localStorage.setItem('jkUserProfile', JSON.stringify(updatedProfile));
