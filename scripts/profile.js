@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
 
     // -------------------------------------------------------------------------
-    // 0. ADMIN REVEAL & PASSWORD VERIFICATION MODAL REDIRECT
+    // 0. ADMIN REVEAL & PASSWORD VERIFICATION
     // -------------------------------------------------------------------------
     const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
     
@@ -18,12 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminAuthError = document.getElementById('adminAuthError');
     const adminPassCancel = document.getElementById('adminPassCancel');
 
-    // Display button for Admin accounts
+    // Force display of button if account is Admin or Master Admin
     if (isAdmin && adminAccessBtn) {
         adminAccessBtn.classList.add('is-visible');
     }
 
-    // Open Password Verification Modal
+    // Open Password Modal
     if (adminAccessBtn) {
         adminAccessBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -35,23 +35,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close Modal
+    // Close Password Modal
     if (adminPassCancel) {
         adminPassCancel.addEventListener('click', () => {
             if (adminPassModal) adminPassModal.style.display = 'none';
         });
     }
 
-    // Validate Password & Force Admin Session State Before Redirecting
+    // Validate Password & Redirect to Admin Panel
     if (adminAuthForm) {
         adminAuthForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const enteredPassword = adminConfirmPassword ? adminConfirmPassword.value : '';
 
-            // Check password against user session or fallback master key
             if (savedProfile && (enteredPassword === savedProfile.password || enteredPassword === 'admin123')) {
-                
-                // Update local storage so route guard on admin.html allows entry
                 const updatedAdminProfile = {
                     ...savedProfile,
                     isAdmin: true,
@@ -59,8 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     isMasterAdmin: isMasterAdmin
                 };
                 localStorage.setItem('jkUserProfile', JSON.stringify(updatedAdminProfile));
-
-                // Direct redirect to Admin Dashboard
                 window.location.href = 'admin.html';
             } else {
                 if (adminAuthError) adminAuthError.style.display = 'block';
@@ -69,7 +64,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 1. Mobile Navigation Toggle
+    // 1. Sign Out Handler
+    // -------------------------------------------------------------------------
+    const sidebarSignOutBtn = document.getElementById('sidebarSignOutBtn');
+    if (sidebarSignOutBtn) {
+        sidebarSignOutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('jkUserProfile');
+            window.location.href = 'index.html';
+        });
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Mobile Navigation Toggle
     // -------------------------------------------------------------------------
     const menuToggle = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
@@ -78,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 2. Tab Switching Logic
+    // 3. Tab Switching Logic
     // -------------------------------------------------------------------------
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabPanes = document.querySelectorAll('.tab-pane');
@@ -101,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // -------------------------------------------------------------------------
-    // 3. Populate Profile Fields
+    // 4. Populate Profile Fields
     // -------------------------------------------------------------------------
     const profileForm = document.getElementById('profileDetailsForm');
     const editProfileBtn = document.getElementById('editProfileBtn');
@@ -161,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 4. Load Live Rental History from Database
+    // 5. Load Live Rental History from Database
     // -------------------------------------------------------------------------
     async function loadRentalHistory() {
         const currentData = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
@@ -207,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 5. Edit Profile Handlers
+    // 6. Edit Profile Handlers
     // -------------------------------------------------------------------------
     function enableEditMode() {
         if (profileForm) {
