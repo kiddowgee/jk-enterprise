@@ -205,3 +205,28 @@ body.is-admin .admin-only {
         margin: 0.5rem 0;
     }
 }
+
+/* Hide all signed-in and admin elements by default */
+.logged-in-only,
+.admin-only {
+    display: none !important;
+}
+
+/* Display signed-out links by default */
+.logged-out-only {
+    display: list-item !important;
+}
+
+/* When signed in (body has user-logged-in class) */
+body.user-logged-in .logged-out-only {
+    display: none !important;
+}
+
+body.user-logged-in .logged-in-only {
+    display: list-item !important;
+}
+
+/* When signed in as admin */
+body.is-admin .admin-only {
+    display: list-item !important;
+}

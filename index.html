@@ -9,38 +9,37 @@
     <link rel="stylesheet" href="styles/auth.css">
 </head>
 <body>
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html">JK Enterprise</a>
+        </div>
+        
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
 
-    <header>
-        <nav class="navbar">
-            <div class="logo">
-                <a href="index.html">JK Enterprise</a>
-            </div>
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-           <ul class="nav-links" id="navLinks">
-    <!-- Signed-Out Only Navigation -->
-    <li class="logged-out-only"><a href="index.html">Home</a></li>
-    <li class="logged-out-only"><a href="about.html">About</a></li>
-    <li class="logged-out-only"><a href="services/quote.html">Get Quote</a></li>
-    <li class="logged-out-only"><a href="signin.html" class="auth-btn">Sign In</a></li>
+        <ul class="nav-links" id="navLinks">
+            <!-- Signed-Out Links (Only Home and Sign In) -->
+            <li class="logged-out-only"><a href="index.html">Home</a></li>
+            <li class="logged-out-only"><a href="signin.html">Sign In</a></li>
 
-    <!-- Signed-In Only Navigation -->
-    <li class="logged-in-only"><a href="index.html">Home</a></li>
-    <li class="logged-in-only"><a href="about.html">About</a></li>
-    <li class="logged-in-only"><a href="services/services.html">Services</a></li>
-    <li class="logged-in-only"><a href="contact.html">Contact</a></li>
-    <li class="admin-only"><a href="admin.html" style="color: #e53e3e; font-weight: bold;">Admin Panel</a></li>
-    <li class="logged-in-only">
-        <a href="profile.html" class="profile-nav-link" aria-label="User Profile">
-            <div class="nav-avatar" id="headerAvatar">JD</div>
-        </a>
-    </li>
-</ul>
-        </nav>
-    </header>
+            <!-- Signed-In Links -->
+            <li class="logged-in-only"><a href="index.html">Home</a></li>
+            <li class="logged-in-only"><a href="about.html">About</a></li>
+            <li class="logged-in-only"><a href="services/services.html">Services</a></li>
+            <li class="logged-in-only"><a href="contact.html">Contact</a></li>
+            <li class="admin-only"><a href="admin.html" style="color: #e53e3e; font-weight: bold;">Admin Panel</a></li>
+            <li class="logged-in-only">
+                <a href="profile.html" class="profile-nav-link" aria-label="User Profile">
+                    <div class="nav-avatar" id="headerAvatar">JD</div>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
 
     <!-- Modal Confirmation Popup for Unauthenticated Bookings -->
     <div id="authModal" class="modal-overlay" style="display: none;">
