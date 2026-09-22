@@ -1,40 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Mobile Navigation Toggle Logic
-    const menuToggle = document.getElementById('menuToggle');
-    const navLinks = document.getElementById('navLinks');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
-    if (menuToggle && navLinks) {
-        menuToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            navLinks.classList.toggle('active');
-        });
+    // -------------------------------------------------------------------------
+    // 1. PAGE RESTRICTION & ROUTE GUARDS
+    // -------------------------------------------------------------------------
+    // Allowed pages when NOT signed in: index.html, about.html, services/quote.html, signin.html
+    const publicPages = ['index.html', 'about.html', 'quote.html', 'signin.html', 'reset-password.html'];
+    
+    // Pages requiring Admin status
+    const adminPages = ['admin.html'];
 
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
-                navLinks.classList.remove('active');
-            }
-        });
-
-        // Close menu when clicking links
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
+    // Redirect signed-out users trying to directly access protected pages (profile, booking, services, contact)
+    if (!currentUser && !publicPages.includes(currentPage)) {
+        window.location.href = 'signin.html';
+        return;
     }
 
-    // 2. Account State Rules & Admin Visibility
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    // Protect Admin Dashboard
+    if (adminPages.includes(currentPage)) {
+        if (!currentUser) {
+            window.location.href = 'signin.html';
+            return;
+        }
+        if (!currentUser.isAdmin && !currentUser.is_admin) {
+            window.location.href = 'index.html';
+            return;
+        }
+    }
 
+    // -------------------------------------------------------------------------
+    // 2. NAVBAR DISPLAY RULES
+    // -------------------------------------------------------------------------
     if (currentUser) {
-        // Hide sign-in button
         document.querySelectorAll('.logged-out-only').forEach(el => el.style.display = 'none');
-        
-        // Show profile & logout buttons
         document.querySelectorAll('.logged-in-only').forEach(el => el.style.display = 'block');
 
-        // Check Admin privilege status
+        // Render user initials on header avatar
+        const headerAvatar = document.getElementById('headerAvatar');
+        if (headerAvatar && currentUser.name) {
+            const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            headerAvatar.textContent = initials.slice(0, 2);
+        }
+
         if (currentUser.isAdmin || currentUser.is_admin) {
             document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
         }
@@ -44,13 +52,51 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
     }
 
-    // Handle Logout
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
+    // -------------------------------------------------------------------------
+    // 3. HAMBURGER MENU DRAWER TOGGLE
+    // -------------------------------------------------------------------------
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. AUTH MODAL INTERCEPTOR FOR BOOKING ACTIONS
+    // -------------------------------------------------------------------------
+    const authModal = document.getElementById('authModal');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalConfirm = document.getElementById('modalConfirm');
+
+    // Attach click listeners to all booking buttons across pages
+    document.querySelectorAll('.book-now-btn, .proceed-booking-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            if (!currentUser) {
+                e.preventDefault();
+                if (authModal) authModal.style.display = 'flex';
+            }
+        });
+    });
+
+    if (modalCancel) {
+        modalCancel.addEventListener('click', () => {
+            if (authModal) authModal.style.display = 'none';
+        });
+    }
+
+    if (modalConfirm) {
+        modalConfirm.addEventListener('click', () => {
+            window.location.href = 'signin.html';
         });
     }
 });

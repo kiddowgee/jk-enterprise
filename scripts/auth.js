@@ -1,14 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
 
-    // Mobile Navigation Menu Toggle
+    // -------------------------------------------------------------------------
+    // 1. Mobile Navigation Menu Toggle
+    // -------------------------------------------------------------------------
     const menuToggle = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
     if (menuToggle && navLinks) {
-        menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
     }
 
-    // Check Authentication State and Apply CSS Visibility Classes
+    // -------------------------------------------------------------------------
+    // 2. Check Authentication State and Apply CSS Visibility Classes
+    // -------------------------------------------------------------------------
     function checkAuthState() {
         const savedProfile = localStorage.getItem('jkUserProfile');
         const isLoggedIn = savedProfile && savedProfile !== '{}';
@@ -17,13 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.classList.add('user-logged-in');
             document.body.classList.add('user-logged-in');
 
-            // Populate avatar initials if header avatar exists
             try {
                 const user = JSON.parse(savedProfile);
                 const name = user.name || user.full_name || 'User';
                 const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
                 const headerAvatar = document.getElementById('headerAvatar');
-                if (headerAvatar) headerAvatar.textContent = initials;
+                if (headerAvatar) headerAvatar.textContent = initials.slice(0, 2);
             } catch (err) {
                 console.error('Error parsing profile session:', err);
             }
@@ -35,16 +47,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     checkAuthState();
 
-    // Sign Out Action
+    // -------------------------------------------------------------------------
+    // 3. Sign Out Action
+    // -------------------------------------------------------------------------
     const sidebarSignOutBtn = document.getElementById('sidebarSignOutBtn');
     if (sidebarSignOutBtn) {
         sidebarSignOutBtn.addEventListener('click', () => {
             localStorage.removeItem('jkUserProfile');
-            window.location.href = 'signin.html';
+            window.location.href = 'index.html';
         });
     }
 
-    // Sign In / Sign Up Form Tab Switching Logic
+    // -------------------------------------------------------------------------
+    // 4. Sign In / Sign Up Form Tab Switching Logic
+    // -------------------------------------------------------------------------
     const tabSignIn = document.getElementById('tabSignIn');
     const tabSignUp = document.getElementById('tabSignUp');
     const signInForm = document.getElementById('signInForm');
@@ -91,7 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Handle Sign In Submission
+    // -------------------------------------------------------------------------
+    // 5. Handle Sign In Submission (Redirects to index.html)
+    // -------------------------------------------------------------------------
     if (signInForm) {
         signInForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -115,10 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok && data.success) {
                     localStorage.setItem('jkUserProfile', JSON.stringify(data.user));
                     if (authFeedback) {
-                        authFeedback.textContent = 'Sign in successful! Redirecting...';
+                        authFeedback.textContent = 'Sign in successful! Redirecting to home...';
                         authFeedback.className = 'form-feedback success';
                     }
-                    setTimeout(() => window.location.href = 'profile.html', 1000);
+                    setTimeout(() => window.location.href = 'index.html', 800);
                 } else {
                     if (authFeedback) {
                         authFeedback.textContent = data.error || 'Invalid credentials.';
@@ -135,7 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Handle Sign Up Submission
+    // -------------------------------------------------------------------------
+    // 6. Handle Sign Up Submission (Redirects to index.html)
+    // -------------------------------------------------------------------------
     if (signUpForm) {
         signUpForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -145,8 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const payload = {
-                accountType: accountType.value,
-                company: accountType.value === 'business' ? document.getElementById('regCompanyName').value : '',
+                accountType: accountType ? accountType.value : 'individual',
+                company: (accountType && accountType.value === 'business') ? document.getElementById('regCompanyName').value : '',
                 name: document.getElementById('regName').value,
                 email: document.getElementById('regEmail').value,
                 phone: document.getElementById('regPhone').value,
@@ -165,10 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok && data.success) {
                     localStorage.setItem('jkUserProfile', JSON.stringify(data.user));
                     if (authFeedback) {
-                        authFeedback.textContent = 'Account created successfully! Redirecting...';
+                        authFeedback.textContent = 'Account created successfully! Redirecting to home...';
                         authFeedback.className = 'form-feedback success';
                     }
-                    setTimeout(() => window.location.href = 'profile.html', 1000);
+                    setTimeout(() => window.location.href = 'index.html', 800);
                 } else {
                     if (authFeedback) {
                         authFeedback.textContent = data.error || 'Failed to create account.';
