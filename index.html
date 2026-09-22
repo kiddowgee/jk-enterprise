@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="JK Enterprise offers professional venue setup, equipment, mobile fridge, toilet, bakkie, and trailer rentals for all your event and transport needs.">
     <title>JK Enterprise - Home</title>
     <link rel="stylesheet" href="styles/index.css">
-    <link rel="stylesheet" href="styles/auth.css">
 </head>
 <body>
 
@@ -21,90 +19,48 @@
                 <span class="bar"></span>
             </button>
             <ul class="nav-links" id="navLinks">
-                <!-- Signed-Out Only Navigation -->
-                <li class="logged-out-only"><a href="index.html">Home</a></li>
-                <li class="logged-out-only"><a href="signin.html" class="auth-btn">Sign In</a></li>
-
-                <!-- Signed-In Only Navigation -->
-                <li class="logged-in-only"><a href="index.html">Home</a></li>
-                <li class="logged-in-only"><a href="about.html">About</a></li>
-                <li class="logged-in-only"><a href="services/services.html">Services</a></li>
-                <li class="logged-in-only"><a href="contact.html">Contact</a></li>
-                <li class="logged-in-only">
-                    <a href="profile.html" class="profile-nav-link" aria-label="User Profile">
-                        <div class="nav-avatar" id="headerAvatar">JD</div>
-                    </a>
-                </li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="rentals.html">Equipment</a></li>
+                <li><a href="signin.html">Sign In</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Modal Confirmation Popup -->
-    <div id="authModal" class="modal-overlay" style="display: none;">
-        <div class="modal-card">
-            <h3>Sign In Required</h3>
-            <p>You need to be signed in to proceed with bookings or rental services. Would you like to sign in now?</p>
-            <div class="modal-actions">
-                <button id="modalCancel" class="modal-btn cancel">Cancel</button>
-                <button id="modalConfirm" class="modal-btn confirm">Sign In</button>
-            </div>
-        </div>
-    </div>
-
     <main>
-        <!-- Hero Section -->
         <section class="hero">
-            <div class="hero-content">
-                <h1>Reliable Event & Transport Solutions</h1>
-                <p>From venue setup and mobile refrigeration to bakkie and trailer rentals—JK Enterprise has you covered.</p>
-                <a href="contact.html" class="cta-button">Request a Quote</a>
-            </div>
+            <h1>Reliable Event & Transport Solutions</h1>
+            <p>From venue setup and mobile refrigeration to bakkie and trailer rentals—JK Enterprise has you covered.</p>
+            <a href="rentals.html" class="btn-primary">Request a Quote</a>
         </section>
 
-        <!-- Brief About Section -->
-        <section class="about-summary">
-            <h2>Who We Are</h2>
-            <p>JK Enterprise provides comprehensive rental and setup solutions for events and logistics. Whether you are hosting an event or need dependable transport equipment, we deliver quality service and well-maintained equipment tailored to your needs.</p>
-        </section>
-
-        <!-- Quick Highlights / Services Overview -->
-        <section class="highlights">
-            <h2>Our Services</h2>
-            <div class="highlight-cards">
-                <div class="card">
-                    <h3>Venue Setup & Rentals</h3>
-                    <p>Complete event setups including tables, chairs, tents, and essential equipment to get your venue ready.</p>
-                    <a href="services/services.html" class="card-link">View Details &rarr;</a>
-                </div>
-                <div class="card">
-                    <h3>Mobile Fridge & Toilet Rental</h3>
-                    <p>Clean, dependable mobile cold storage units and portable toilets to keep your event comfortable and fully equipped.</p>
-                    <a href="services/services.html" class="card-link">View Details &rarr;</a>
-                </div>
-                <div class="card">
-                    <h3>Bakkie & Trailer Rentals</h3>
-                    <p>Affordable and well-maintained bakkies and trailers for hauling, transport, and logistical needs.</p>
-                    <a href="services/services.html" class="card-link">View Details &rarr;</a>
-                </div>
-            </div>
+        <section style="max-width: 800px; margin: 3rem auto; padding: 0 1rem; text-align: center;">
+            <h2 style="margin-bottom: 1rem;">Who We Are</h2>
+            <p>JK Enterprise provides comprehensive rental and setup solutions for events and logistics. Whether you are hosting an event or transporting goods, our equipment and vehicles ensure seamless execution.</p>
         </section>
     </main>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-info">
-                <h4>JK Enterprise</h4>
-                <p>123 Business Street, Suite 100</p>
-                <p>Email: info@jkenterprise.com</p>
-                <p>Phone: (123) 456-7890</p>
-            </div>
-            <div class="footer-copyright">
-                <p>&copy; 2026 JK Enterprise. All rights reserved.</p>
-            </div>
-        </div>
+    <footer style="margin-top: auto; background: #1a202c; color: #fff; text-align: center; padding: 1.5rem 0;">
+        <p>&copy; 2026 JK Enterprise. All rights reserved.</p>
     </footer>
 
-    <script src="scripts/auth.js"></script>
-    <script src="scripts/index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    navLinks.classList.toggle('active');
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                        navLinks.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
