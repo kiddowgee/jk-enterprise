@@ -13,14 +13,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const addUserForm = document.getElementById('addUserForm');
     if (addUserForm) {
-        addUserForm.addEventListener('submit', (e) => {
+        addUserForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('newUserName').value;
             const email = document.getElementById('newUserEmail').value;
             const role = document.getElementById('newUserRole').value === 'admin' ? 'Admin' : 'Standard User';
 
-            systemUsers.push({ id: Date.now(), name, email, role });
+            // Default temporary password for newly created accounts
+            const tempPassword = 'TempPassword123!';
+
+            const newUser = {
+                id: Date.now(),
+                name,
+                email,
+                password: tempPassword,
+                role,
+                mustChangePassword: true
+            };
+
+            systemUsers.push(newUser);
             saveAndRenderUsers();
+
+            // Sync with backend server
+            try {
+                await fetch(`${API_URL}/admin/users`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newUser)
+                });
+            } catch (err) {
+                console.error('Failed to sync user with backend:', err);
+            }
+
+            alert(`Account created for ${email}.\nTemporary Password: ${tempPassword}\n\nThe user will be prompted to set a new password on their first login.`);
             addUserForm.reset();
         });
     }
