@@ -1,30 +1,63 @@
 document.addEventListener('DOMContentLoaded', () => {
-   // -------------------------------------------------------------------------
-// 1. Mobile Navigation Menu Toggle
-// -------------------------------------------------------------------------
-const menuToggle = document.getElementById('menuToggle');
-const navLinks = document.getElementById('navLinks');
+    // -------------------------------------------------------------------------
+    // 0. Check Auth State & Apply Body Classes
+    // -------------------------------------------------------------------------
+    function checkAuthState() {
+        const savedProfile = localStorage.getItem('jkUserProfile');
+        const isLoggedIn = savedProfile && savedProfile !== '{}';
 
-if (menuToggle && navLinks) {
-    menuToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        navLinks.classList.toggle('active');
-    });
+        if (isLoggedIn) {
+            document.body.classList.add('user-logged-in');
 
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
-            navLinks.classList.remove('active');
+            try {
+                const user = JSON.parse(savedProfile);
+                const name = user.name || user.full_name || 'User';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                const headerAvatar = document.getElementById('headerAvatar');
+                if (headerAvatar) headerAvatar.textContent = initials.slice(0, 2);
+
+                if (user.isAdmin || user.is_admin) {
+                    document.body.classList.add('is-admin');
+                } else {
+                    document.body.classList.remove('is-admin');
+                }
+            } catch (err) {
+                console.error('Error parsing session data:', err);
+            }
+        } else {
+            document.body.classList.remove('user-logged-in');
+            document.body.classList.remove('is-admin');
         }
-    });
+    }
 
-    // Close menu when clicking any nav link
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
+    checkAuthState();
+
+    // -------------------------------------------------------------------------
+    // 1. Mobile Navigation Menu Toggle
+    // -------------------------------------------------------------------------
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
         });
-    });
-}
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking any nav link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    }
 
     // -------------------------------------------------------------------------
     // 2. Expand/Collapse Details Drawer (.toggle-details-btn)
@@ -33,7 +66,6 @@ if (menuToggle && navLinks) {
 
     toggleButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Find parent article card and select its drawer container
             const parentCard = btn.closest('.service-card');
             const drawer = parentCard ? parentCard.querySelector('.service-details-drawer') : null;
 
@@ -44,7 +76,6 @@ if (menuToggle && navLinks) {
                     drawer.classList.remove('active');
                     drawer.style.display = 'none';
                     
-                    // Reset button text based on service section
                     if (parentCard.id === 'mobile-rentals') {
                         btn.innerHTML = 'View Fleet & Rates <span class="arrow">&darr;</span>';
                     } else if (parentCard.id === 'vehicle-rentals') {
@@ -71,19 +102,15 @@ if (menuToggle && navLinks) {
     const modalCancel = document.getElementById('modalCancel');
     const modalConfirm = document.getElementById('modalConfirm');
 
-    // Select rental buttons
     const rentalButtons = document.querySelectorAll('.btn-rent-action, .service-cta');
 
     rentalButtons.forEach(button => {
-        // Skip quote button if user is filling out a general inquiry
         if (button.getAttribute('href') === 'quote.html') return;
 
         button.addEventListener('click', (e) => {
             if (!isLoggedIn) {
-                // Prevent direct navigation to booking confirmation page
                 e.preventDefault();
 
-                // Show Sign In Required Modal
                 if (authModal) {
                     authModal.style.display = 'flex';
                 } else {
