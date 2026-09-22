@@ -1,3 +1,4 @@
+/* Base Resets */
 * {
     margin: 0;
     padding: 0;
@@ -5,20 +6,23 @@
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #222222;
-    background-color: #f4f4f4;
+    color: #2d3748;
+    background-color: #f7fafc;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* Header & Navbar */
+/* Header & Navigation Bar */
 header {
     background-color: #1a202c;
     color: #ffffff;
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .navbar {
@@ -33,8 +37,9 @@ header {
 .logo a {
     color: #ffffff;
     font-size: 1.5rem;
-    font-weight: bold;
+    font-weight: 700;
     text-decoration: none;
+    letter-spacing: 0.5px;
 }
 
 .nav-links {
@@ -45,22 +50,36 @@ header {
 }
 
 .nav-links a {
-    color: #ffffff;
+    color: #e2e8f0;
     text-decoration: none;
     font-weight: 500;
+    font-size: 0.95rem;
     transition: color 0.2s ease;
 }
 
 .nav-links a:hover {
-    color: #cbd5e0;
+    color: #ffffff;
+}
+
+.nav-avatar {
+    width: 36px;
+    height: 36px;
+    background-color: #3182ce;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
 }
 
 .menu-toggle {
     display: none;
     flex-direction: column;
     justify-content: space-between;
-    width: 28px;
-    height: 20px;
+    width: 26px;
+    height: 18px;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -72,39 +91,193 @@ header {
     height: 3px;
     width: 100%;
     background-color: #ffffff;
-    border-radius: 4px;
+    border-radius: 2px;
+}
+
+/* Authentication State Visibility Rules */
+.logged-in-only,
+.admin-only {
+    display: none !important;
+}
+
+.logged-out-only {
+    display: list-item !important;
+}
+
+body.user-logged-in .logged-out-only {
+    display: none !important;
+}
+
+body.user-logged-in .logged-in-only {
+    display: list-item !important;
+}
+
+body.is-admin .admin-only {
+    display: list-item !important;
 }
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://via.placeholder.com/1200x500') center/cover no-repeat;
+    background: linear-gradient(rgba(26, 32, 44, 0.85), rgba(26, 32, 44, 0.85)), url('https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
     color: #ffffff;
     text-align: center;
-    padding: 5rem 1rem;
+    padding: 6rem 1.5rem;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 2.75rem;
+    font-weight: 800;
+    margin-bottom: 1.25rem;
+    line-height: 1.2;
 }
 
 .hero p {
-    font-size: 1.1rem;
-    max-width: 600px;
-    margin: 0 auto 2rem;
+    font-size: 1.2rem;
+    color: #e2e8f0;
+    margin-bottom: 2rem;
+    line-height: 1.6;
 }
 
-.btn-primary {
-    background-color: #ffffff;
-    color: #1a202c;
-    padding: 0.75rem 1.5rem;
+.cta-button {
+    background-color: #3182ce;
+    color: #ffffff;
+    padding: 0.85rem 2rem;
     text-decoration: none;
-    font-weight: bold;
-    border-radius: 4px;
+    font-weight: 600;
+    border-radius: 6px;
     display: inline-block;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-/* Mobile Responsiveness Rules */
+.cta-button:hover {
+    background-color: #2b6cb0;
+    transform: translateY(-1px);
+}
+
+/* About Section */
+.about-summary {
+    max-width: 850px;
+    margin: 4rem auto 2rem;
+    padding: 0 1.5rem;
+    text-align: center;
+}
+
+.about-summary h2 {
+    font-size: 2rem;
+    color: #1a202c;
+    margin-bottom: 1rem;
+}
+
+.about-summary p {
+    font-size: 1.1rem;
+    color: #4a5568;
+    line-height: 1.8;
+}
+
+/* Services Highlights Grid */
+.highlights {
+    max-width: 1200px;
+    margin: 3rem auto 5rem;
+    padding: 0 1.5rem;
+}
+
+.highlights h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #1a202c;
+    margin-bottom: 2.5rem;
+}
+
+.highlight-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+    font-size: 1.3rem;
+    color: #1a202c;
+    margin-bottom: 0.75rem;
+}
+
+.card p {
+    color: #718096;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.card-link {
+    color: #3182ce;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.card-link:hover {
+    color: #2b6cb0;
+}
+
+/* Footer Section */
+footer {
+    background-color: #1a202c;
+    color: #a0aec0;
+    margin-top: auto;
+    padding: 3rem 1.5rem 1.5rem;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.footer-info h4 {
+    color: #ffffff;
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+}
+
+.footer-info p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.footer-copyright {
+    width: 100%;
+    border-top: 1px solid #2d3748;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+/* Mobile Responsive Drawer Overlay */
 @media (max-width: 768px) {
     .menu-toggle {
         display: flex !important;
@@ -120,7 +293,6 @@ header {
         background-color: #1a202c;
         padding: 1.5rem 0;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
     }
 
     .nav-links.active {
@@ -132,101 +304,8 @@ header {
         text-align: center;
         margin: 0.5rem 0;
     }
-}
 
-/* --- Navigation Auth State Visibility Rules --- */
-
-/* By default (signed out): Hide signed-in elements, show signed-out elements */
-.logged-in-only,
-.admin-only {
-    display: none !important;
-}
-
-.logged-out-only {
-    display: list-item !important;
-}
-
-/* When Signed In (body has .user-logged-in class) */
-body.user-logged-in .logged-out-only {
-    display: none !important;
-}
-
-body.user-logged-in .logged-in-only {
-    display: list-item !important;
-}
-
-/* Admin Panel (visible only when body has .is-admin class) */
-body.is-admin .admin-only {
-    display: list-item !important;
-}
-
-/* Mobile Drawer Styles */
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: flex !important;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 28px;
-        height: 20px;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        z-index: 1001;
+    .hero h1 {
+        font-size: 2rem;
     }
-
-    .menu-toggle .bar {
-        height: 3px;
-        width: 100%;
-        background-color: #ffffff;
-        border-radius: 4px;
-    }
-
-    .nav-links {
-        display: none !important;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background-color: #1a202c;
-        padding: 1.5rem 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-    }
-
-    .nav-links.active {
-        display: flex !important;
-    }
-
-    .nav-links li {
-        width: 100%;
-        text-align: center;
-        margin: 0.5rem 0;
-    }
-}
-
-/* Hide all signed-in and admin elements by default */
-.logged-in-only,
-.admin-only {
-    display: none !important;
-}
-
-/* Display signed-out links by default */
-.logged-out-only {
-    display: list-item !important;
-}
-
-/* When signed in (body has user-logged-in class) */
-body.user-logged-in .logged-out-only {
-    display: none !important;
-}
-
-body.user-logged-in .logged-in-only {
-    display: list-item !important;
-}
-
-/* When signed in as admin */
-body.is-admin .admin-only {
-    display: list-item !important;
 }
