@@ -12,8 +12,7 @@
 }
 
 /* Sidebar Box */
-.profile-sidebar,
-.sidebar-card {
+.profile-sidebar {
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 6px;
@@ -29,8 +28,7 @@
     margin-bottom: 1.25rem;
 }
 
-.avatar-circle,
-.user-avatar-circle {
+.avatar-circle {
     width: 68px;
     height: 68px;
     background-color: #111111;
@@ -44,22 +42,19 @@
     margin: 0 auto 0.75rem auto;
 }
 
-.user-avatar h3,
-.sidebar-card h3 {
+.user-avatar h3 {
     font-size: 1.1rem;
     color: #111111;
     margin-bottom: 0.2rem;
 }
 
-.user-avatar p,
-.sidebar-card p {
+.user-avatar p {
     font-size: 0.85rem;
     color: #666666;
     margin-bottom: 0.5rem;
 }
 
-.account-badge,
-.badge {
+.account-badge {
     display: inline-block;
     padding: 0.2rem 0.5rem;
     background-color: #f0f0f0;
@@ -71,8 +66,7 @@
     letter-spacing: 0.5px;
 }
 
-.profile-menu,
-.profile-tabs {
+.profile-menu {
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -106,9 +100,8 @@
     font-weight: bold;
 }
 
-/* Sidebar Footer & Actions (Admin & Sign Out) */
-.sidebar-footer,
-.sidebar-actions {
+/* Sidebar Footer & Actions (View as Admin & Sign Out) */
+.sidebar-footer {
     margin-top: 1.5rem;
     padding-top: 1rem;
     border-top: 1px solid #eeeeee;
@@ -118,9 +111,10 @@
 }
 
 .btn-admin-view {
+    display: none;
     width: 100%;
     background-color: #111111;
-    color: #ffffff;
+    color: #ffffff !important;
     border: none;
     padding: 0.65rem 1rem;
     font-weight: bold;
@@ -130,12 +124,15 @@
     transition: background-color 0.2s ease;
 }
 
+.btn-admin-view.is-visible {
+    display: block !important;
+}
+
 .btn-admin-view:hover {
     background-color: #333333;
 }
 
-.signout-btn,
-.btn-signout {
+.signout-btn {
     width: 100%;
     background-color: transparent;
     color: #111111;
@@ -148,15 +145,13 @@
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.signout-btn:hover,
-.btn-signout:hover {
+.signout-btn:hover {
     background-color: #111111;
     color: #ffffff;
 }
 
 /* Main Content Panel */
-.profile-content,
-.content-card {
+.profile-content {
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 6px;
@@ -173,8 +168,7 @@
 }
 
 /* Tab Header Flex Box */
-.tab-header-flex,
-.pane-header {
+.tab-header-flex {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -183,8 +177,7 @@
     border-bottom: 1px solid #eeeeee;
 }
 
-.tab-header-flex h2,
-.pane-header h2 {
+.tab-header-flex h2 {
     font-size: 1.35rem;
     color: #111111;
     margin: 0;
@@ -245,10 +238,8 @@ form.edit-mode .editable-field {
 }
 
 /* Action Buttons */
-.action-btn,
-.btn-primary,
-.btn-secondary {
-    padding: 0.5.5rem 1rem;
+.action-btn {
+    padding: 0.5rem 1rem;
     font-weight: bold;
     font-size: 0.85rem;
     border-radius: 4px;
@@ -256,21 +247,18 @@ form.edit-mode .editable-field {
     transition: all 0.2s ease;
 }
 
-.edit-btn,
-.btn-secondary {
+.edit-btn {
     background-color: transparent;
     border: 1px solid #111111;
     color: #111111;
 }
 
-.edit-btn:hover,
-.btn-secondary:hover {
+.edit-btn:hover {
     background-color: #111111;
     color: #ffffff;
 }
 
-.form-action-group,
-#formActionButtons {
+.form-action-group {
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
@@ -289,15 +277,13 @@ form.edit-mode .editable-field {
     background-color: #e0e0e0;
 }
 
-.save-btn,
-.btn-primary {
+.save-btn {
     background-color: #111111;
     border: 1px solid #111111;
     color: #ffffff;
 }
 
-.save-btn:hover,
-.btn-primary:hover {
+.save-btn:hover {
     background-color: #333333;
 }
 
@@ -368,7 +354,7 @@ form.edit-mode .editable-field {
     margin-bottom: 1.5rem;
 }
 
-/* Responsive Adjustments */
+/* Responsive adjustments */
 @media (max-width: 768px) {
     .profile-container {
         grid-template-columns: 1fr;

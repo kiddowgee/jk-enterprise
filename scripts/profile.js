@@ -2,10 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'https://jk-enterprise-xqtu.onrender.com/api';
 
     // -------------------------------------------------------------------------
-    // 0. ADMIN REDIRECT & PASSWORD VERIFICATION MODAL
+    // 0. ADMIN REVEAL & PASSWORD VERIFICATION
     // -------------------------------------------------------------------------
     const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
-    const isMasterAdmin = savedProfile.email && savedProfile.email.toLowerCase() === 'rethabileseshabela07@gmail.com';
+    
+    // Explicit email check for Master Admin Rethabile Seshabela
+    const userEmail = savedProfile.email ? savedProfile.email.toLowerCase() : '';
+    const isMasterAdmin = userEmail === 'rethabileseshabela07@gmail.com';
     const isAdmin = isMasterAdmin || savedProfile.isAdmin || savedProfile.is_admin;
 
     const adminAccessBtn = document.getElementById('adminAccessBtn');
@@ -15,12 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminAuthError = document.getElementById('adminAuthError');
     const adminPassCancel = document.getElementById('adminPassCancel');
 
-    // Reveal "View as Admin" button directly above Sign Out for Admin Accounts
+    // Force display of button if account is Admin or Master Admin
     if (isAdmin && adminAccessBtn) {
-        adminAccessBtn.style.display = 'block';
+        adminAccessBtn.classList.add('is-visible');
     }
 
-    // Open Password Modal on Click
+    // Open Password Modal
     if (adminAccessBtn) {
         adminAccessBtn.addEventListener('click', () => {
             if (adminPassModal) {
@@ -31,20 +34,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close Modal
+    // Close Password Modal
     if (adminPassCancel) {
         adminPassCancel.addEventListener('click', () => {
             if (adminPassModal) adminPassModal.style.display = 'none';
         });
     }
 
-    // Validate Password & Redirect
+    // Validate Password & Redirect to Admin Panel
     if (adminAuthForm) {
         adminAuthForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const enteredPassword = adminConfirmPassword ? adminConfirmPassword.value : '';
 
-            // Verify password against logged-in profile password or fallback admin master key
             if (savedProfile && (enteredPassword === savedProfile.password || enteredPassword === 'admin123')) {
                 window.location.href = 'admin.html';
             } else {
@@ -251,19 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (detailsFeedback) {
                 detailsFeedback.textContent = 'Personal information updated successfully!';
                 detailsFeedback.className = 'form-feedback success';
-            }
-        });
-    }
-
-    const verificationForm = document.getElementById('verificationForm');
-    const verificationFeedback = document.getElementById('verificationFeedback');
-
-    if (verificationForm) {
-        verificationForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (verificationFeedback) {
-                verificationFeedback.textContent = 'Verification documents uploaded and under review.';
-                verificationFeedback.className = 'form-feedback success';
             }
         });
     }

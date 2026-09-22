@@ -37,44 +37,45 @@
 
     <main class="profile-container">
         <!-- Sidebar Navigation Card -->
-        <aside class="sidebar-card">
-            <div class="user-avatar-circle" id="avatarInitials">RS</div>
-            <h3 id="sidebarName">Rethabile Seshabela</h3>
-            <p id="sidebarEmail">rethabileseshabela07@gmail.com</p>
-            <span class="badge" id="sidebarAccountBadge">INDIVIDUAL</span>
+        <aside class="profile-sidebar">
+            <div class="user-avatar">
+                <div class="avatar-circle" id="avatarInitials">RS</div>
+                <h3 id="sidebarName">Rethabile Seshabela</h3>
+                <p id="sidebarEmail">rethabileseshabela07@gmail.com</p>
+                <span class="account-badge" id="sidebarAccountBadge">INDIVIDUAL</span>
+            </div>
 
-            <nav class="profile-tabs">
-                <button class="tab-btn active" data-tab="personal-tab">Personal Information</button>
-                <button class="tab-btn" data-tab="verification-tab">Verification Documents</button>
-                <button class="tab-btn" data-tab="history-tab">Rental History</button>
-            </nav>
+            <ul class="profile-menu">
+                <li><button class="tab-btn active" data-tab="personal-tab">Personal Information</button></li>
+                <li><button class="tab-btn" data-tab="verification-tab">Verification Documents</button></li>
+                <li><button class="tab-btn" data-tab="history-tab">Rental History</button></li>
+            </ul>
 
-            <div class="sidebar-actions" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
-                <!-- View as Admin Button (Visible only to Admins) -->
-                <button id="adminAccessBtn" class="admin-only" style="width: 100%; background: #111111; color: #ffffff; padding: 0.75rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; display: none;">
+            <!-- Sidebar Actions Container -->
+            <div class="sidebar-footer">
+                <button id="adminAccessBtn" class="btn-admin-view">
                     View as Admin
                 </button>
-                <!-- Sign Out Button -->
-                <button id="sidebarSignOutBtn" class="btn-signout" style="width: 100%; padding: 0.75rem; border: 1px solid #111111; background: transparent; font-weight: bold; border-radius: 4px; cursor: pointer;">
+                <button id="sidebarSignOutBtn" class="signout-btn">
                     Sign Out
                 </button>
             </div>
         </aside>
 
         <!-- Main Profile Content Area -->
-        <section class="content-card">
+        <section class="profile-content">
             
             <!-- Tab 1: Personal Information -->
             <div id="personal-tab" class="tab-pane active">
-                <div class="pane-header">
+                <div class="tab-header-flex">
                     <h2>Personal Information</h2>
-                    <button type="button" id="editProfileBtn" class="btn-secondary">Edit Details</button>
+                    <button type="button" id="editProfileBtn" class="action-btn edit-btn">Edit Details</button>
                 </div>
 
                 <form id="profileDetailsForm" class="view-mode">
                     <div class="form-group">
                         <label for="profileAccountType">Account Type</label>
-                        <input type="text" id="profileAccountType" readonly value="Individual / Personal Use">
+                        <input type="text" id="profileAccountType" class="readonly-input" readonly value="Individual / Personal Use">
                     </div>
 
                     <div class="form-group" id="profileCompanyGroup" style="display: none;">
@@ -102,9 +103,9 @@
                         <textarea id="profileAddress" class="editable-field" readonly rows="3" placeholder="Enter your delivery or physical address..."></textarea>
                     </div>
 
-                    <div id="formActionButtons" style="display: none; gap: 1rem; margin-top: 1rem;">
-                        <button type="submit" class="btn-primary">Save Changes</button>
-                        <button type="button" id="discardChangesBtn" class="btn-secondary">Cancel</button>
+                    <div id="formActionButtons" class="form-action-group" style="display: none;">
+                        <button type="button" id="discardChangesBtn" class="action-btn cancel-btn">Cancel</button>
+                        <button type="submit" class="action-btn save-btn">Save Changes</button>
                     </div>
                     <p id="detailsFeedback" class="form-feedback"></p>
                 </form>
@@ -113,7 +114,7 @@
             <!-- Tab 2: Verification Documents -->
             <div id="verification-tab" class="tab-pane">
                 <h2>Verification Documents</h2>
-                <p style="color: #666; margin-bottom: 1.5rem;">Upload required South African ID and proof of residence to enable vehicle and trailer rentals.</p>
+                <p class="tab-description">Upload required South African ID and proof of residence to enable vehicle and trailer rentals.</p>
 
                 <form id="verificationForm">
                     <div class="form-group">
@@ -122,7 +123,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="proofOfAddress">Proof of Residence (Utility bill or bank statement < 3 months)</label>
+                        <label for="proofOfAddress">Proof of Residence (Utility bill or bank statement &lt; 3 months)</label>
                         <input type="file" id="proofOfAddress" accept=".pdf, .png, .jpg, .jpeg">
                     </div>
 
@@ -131,14 +132,14 @@
                         <input type="file" id="driversLicense" accept=".pdf, .png, .jpg, .jpeg">
                     </div>
 
-                    <button type="submit" class="btn-primary" style="margin-top: 1rem;">Upload Documents</button>
+                    <button type="submit" class="action-btn save-btn" style="margin-top: 1rem;">Upload Documents</button>
                     <p id="verificationFeedback" class="form-feedback"></p>
                 </form>
             </div>
 
             <!-- Tab 3: Rental History -->
             <div id="history-tab" class="tab-pane">
-                <h2>Rental & Booking History</h2>
+                <h2>Rental &amp; Booking History</h2>
                 <div class="history-list">
                     <p style="color: #666;">Loading your previous bookings...</p>
                 </div>
@@ -172,8 +173,8 @@
                 </div>
                 <p id="adminAuthError" style="color: #ef4444; font-size: 0.85rem; display: none; margin-bottom: 1rem;">Incorrect password. Please try again.</p>
                 <div class="modal-actions" style="display: flex; gap: 0.75rem; justify-content: center;">
-                    <button type="button" id="adminPassCancel" class="modal-btn cancel" style="padding: 0.65rem 1.25rem; background: #e2e8f0; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Cancel</button>
-                    <button type="submit" class="modal-btn confirm" style="padding: 0.65rem 1.25rem; background: #111111; color: #ffffff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Confirm & Proceed</button>
+                    <button type="button" id="adminPassCancel" class="action-btn cancel-btn">Cancel</button>
+                    <button type="submit" class="action-btn save-btn">Confirm &amp; Proceed</button>
                 </div>
             </form>
         </div>
