@@ -44,12 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
             navLinks.classList.toggle('active');
         });
 
+        // Close menu when clicking anywhere outside
         document.addEventListener('click', (e) => {
             if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
                 navLinks.classList.remove('active');
             }
         });
 
+        // Close menu when tapping any link inside
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');

@@ -22,7 +22,7 @@ main {
 }
 
 /* ==========================================
-   Header & Navigation
+   Header & Navigation Bar
    ========================================== */
 header {
     background-color: #111111;
@@ -39,6 +39,7 @@ header {
     max-width: 1100px;
     margin: 0 auto;
     padding: 1rem 2rem;
+    position: relative; /* Context parent for mobile absolute dropdown */
 }
 
 .logo a {
@@ -120,60 +121,68 @@ body.is-admin .admin-only {
 .menu-toggle {
     display: none;
     flex-direction: column;
-    background: none;
+    justify-content: space-between;
+    width: 26px;
+    height: 18px;
+    background: transparent;
     border: none;
     cursor: pointer;
-    gap: 4px;
+    padding: 0;
+    z-index: 1001;
 }
 
 .menu-toggle .bar {
-    width: 22px;
-    height: 2px;
+    height: 3px;
+    width: 100%;
     background-color: #ffffff;
+    border-radius: 2px;
 }
 
 @media (max-width: 768px) {
     .menu-toggle {
         display: flex !important;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 26px;
-        height: 18px;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        z-index: 1001;
     }
 
-    .menu-toggle .bar {
-        height: 3px;
-        width: 100%;
-        background-color: #ffffff;
-        border-radius: 2px;
-    }
-
-    .nav-links {
+    /* Mobile closed nav container */
+    .navbar .nav-links {
         display: none !important;
-        flex-direction: column;
+        flex-direction: column !important;
         position: absolute;
         top: 100%;
         left: 0;
         width: 100%;
         background-color: #111111;
         padding: 1.5rem 0;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
         z-index: 1000;
+        border-top: 1px solid #222222;
     }
 
-    .nav-links.active {
+    /* Mobile open nav container (activated by scripts/services.js) */
+    .navbar .nav-links.active {
         display: flex !important;
     }
 
-    .nav-links li {
+    .navbar .nav-links li {
         width: 100%;
         text-align: center;
         margin: 0.5rem 0;
+    }
+
+    .navbar .nav-links li.logged-out-only {
+        display: block !important;
+    }
+
+    body.user-logged-in .navbar .nav-links li.logged-out-only {
+        display: none !important;
+    }
+
+    body.user-logged-in .navbar .nav-links li.logged-in-only {
+        display: block !important;
+    }
+
+    body.is-admin .navbar .nav-links li.admin-only {
+        display: block !important;
     }
 }
 
@@ -200,7 +209,7 @@ body.is-admin .admin-only {
 }
 
 /* ==========================================
-   Services Section & Expandable Cards
+   Services Section & Accordion Cards
    ========================================== */
 .services-container {
     max-width: 1100px;
@@ -268,7 +277,7 @@ body.is-admin .admin-only {
     transition: transform 0.4s ease;
 }
 
-/* CSS Grid Template Rows Transition */
+/* Smooth Accordion Grid Animation */
 .service-details-drawer {
     display: grid;
     grid-template-rows: 0fr;
@@ -284,7 +293,7 @@ body.is-admin .admin-only {
     border-top: 1px solid transparent;
 }
 
-/* Expanded Card Active State */
+/* Expanded Card State */
 .service-card.expanded .service-details-drawer {
     grid-template-rows: 1fr;
 }
@@ -302,25 +311,26 @@ body.is-admin .admin-only {
 
 .drawer-content h3 {
     font-size: 1.2rem;
+    font-weight: bold;
     color: #111111 !important;
-    margin: 1.25rem 0 0.75rem 0;
+    margin: 1.5rem 0 0.75rem 0;
 }
 
 .drawer-content h3:first-child {
     margin-top: 0;
 }
 
-.drawer-content p,
-.drawer-content li {
+.drawer-content p {
     color: #333333 !important;
     font-size: 0.95rem;
     line-height: 1.6;
+    margin-bottom: 1rem;
 }
 
-/* Specs & Verification Styling */
+/* Item Spec Card Grid */
 .item-specs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1.25rem;
     margin-bottom: 1.5rem;
 }
@@ -334,6 +344,7 @@ body.is-admin .admin-only {
 
 .spec-card h4 {
     font-size: 1rem;
+    font-weight: bold;
     color: #111111 !important;
     margin-bottom: 0.5rem;
 }
@@ -350,18 +361,29 @@ body.is-admin .admin-only {
     margin-bottom: 0;
 }
 
+/* Verification Block Styling */
 .verification-box {
-    background-color: #f0f0f0;
+    background-color: #eeeeee;
     border-left: 4px solid #111111;
     padding: 1.25rem;
     margin: 1.5rem 0;
     border-radius: 0 4px 4px 0;
 }
 
+.verification-box h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+}
+
+.verification-box p {
+    margin-bottom: 0;
+    color: #333333 !important;
+}
+
 .service-features {
     list-style-type: square;
     padding-left: 1.25rem;
-    margin: 0.75rem 0;
+    margin: 0.75rem 0 1.25rem 0;
     color: #444444;
 }
 
@@ -380,6 +402,7 @@ body.is-admin .admin-only {
     font-size: 0.9rem;
     border-radius: 4px;
     margin-top: 1rem;
+    transition: background-color 0.2s ease;
 }
 
 .service-cta:hover,
