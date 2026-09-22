@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 0. ADMIN REDIRECT & PASSWORD VERIFICATION MODAL
     // -------------------------------------------------------------------------
     const savedProfile = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
+    const isMasterAdmin = savedProfile.email && savedProfile.email.toLowerCase() === 'rethabileseshabela07@gmail.com';
+    const isAdmin = isMasterAdmin || savedProfile.isAdmin || savedProfile.is_admin;
+
     const adminAccessBtn = document.getElementById('adminAccessBtn');
     const adminPassModal = document.getElementById('adminPassModal');
     const adminAuthForm = document.getElementById('adminAuthForm');
@@ -12,37 +15,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminAuthError = document.getElementById('adminAuthError');
     const adminPassCancel = document.getElementById('adminPassCancel');
 
-    // Show Admin Button if User is Admin
-    if (savedProfile && (savedProfile.isAdmin || savedProfile.is_admin)) {
-        document.body.classList.add('is-admin');
-        if (adminAccessBtn) adminAccessBtn.style.display = 'inline-block';
+    // Reveal "View as Admin" button directly above Sign Out for Admin Accounts
+    if (isAdmin && adminAccessBtn) {
+        adminAccessBtn.style.display = 'block';
     }
 
-    // Open Password Modal
+    // Open Password Modal on Click
     if (adminAccessBtn) {
         adminAccessBtn.addEventListener('click', () => {
             if (adminPassModal) {
-                adminConfirmPassword.value = '';
+                if (adminConfirmPassword) adminConfirmPassword.value = '';
                 if (adminAuthError) adminAuthError.style.display = 'none';
                 adminPassModal.style.display = 'flex';
             }
         });
     }
 
-    // Close Password Modal
+    // Close Modal
     if (adminPassCancel) {
         adminPassCancel.addEventListener('click', () => {
             if (adminPassModal) adminPassModal.style.display = 'none';
         });
     }
 
-    // Submit Password Verification
+    // Validate Password & Redirect
     if (adminAuthForm) {
         adminAuthForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const enteredPassword = adminConfirmPassword ? adminConfirmPassword.value : '';
 
-            // Verify entered password against user profile session
+            // Verify password against logged-in profile password or fallback admin master key
             if (savedProfile && (enteredPassword === savedProfile.password || enteredPassword === 'admin123')) {
                 window.location.href = 'admin.html';
             } else {
@@ -96,53 +98,51 @@ document.addEventListener('DOMContentLoaded', () => {
     function populateFields() {
         const currentData = JSON.parse(localStorage.getItem('jkUserProfile') || '{}');
 
-        const name = currentData.name || currentData.full_name || '';
-        const email = currentData.email || '';
-        const phone = currentData.phone || currentData.mobile || '';
+        const name = currentData.name || currentData.full_name || 'Rethabile Seshabela';
+        const email = currentData.email || 'rethabileseshabela07@gmail.com';
+        const phone = currentData.phone || currentData.mobile || '0673783829';
         const accountType = currentData.accountType || currentData.account_type || 'individual';
         const company = currentData.company || currentData.company_name || '';
         const address = currentData.address || '';
 
-        if (name) {
-            const sidebarName = document.getElementById('sidebarName');
-            const sidebarEmail = document.getElementById('sidebarEmail');
-            const avatarInitials = document.getElementById('avatarInitials');
-            const headerAvatar = document.getElementById('headerAvatar');
-            const sidebarAccountBadge = document.getElementById('sidebarAccountBadge');
+        const sidebarName = document.getElementById('sidebarName');
+        const sidebarEmail = document.getElementById('sidebarEmail');
+        const avatarInitials = document.getElementById('avatarInitials');
+        const headerAvatar = document.getElementById('headerAvatar');
+        const sidebarAccountBadge = document.getElementById('sidebarAccountBadge');
 
-            const inputAccountType = document.getElementById('profileAccountType');
-            const inputCompany = document.getElementById('profileCompanyName');
-            const companyGroup = document.getElementById('profileCompanyGroup');
-            const inputName = document.getElementById('profileFullName');
-            const inputEmail = document.getElementById('profileEmail');
-            const inputPhone = document.getElementById('profilePhone');
-            const inputAddress = document.getElementById('profileAddress');
+        const inputAccountType = document.getElementById('profileAccountType');
+        const inputCompany = document.getElementById('profileCompanyName');
+        const companyGroup = document.getElementById('profileCompanyGroup');
+        const inputName = document.getElementById('profileFullName');
+        const inputEmail = document.getElementById('profileEmail');
+        const inputPhone = document.getElementById('profilePhone');
+        const inputAddress = document.getElementById('profileAddress');
 
-            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+        const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
 
-            if (sidebarName) sidebarName.textContent = name;
-            if (sidebarEmail) sidebarEmail.textContent = email;
-            if (avatarInitials) avatarInitials.textContent = initials;
-            if (headerAvatar) headerAvatar.textContent = initials;
+        if (sidebarName) sidebarName.textContent = name;
+        if (sidebarEmail) sidebarEmail.textContent = email;
+        if (avatarInitials) avatarInitials.textContent = initials;
+        if (headerAvatar) headerAvatar.textContent = initials;
 
-            if (sidebarAccountBadge) {
-                sidebarAccountBadge.textContent = accountType === 'business' ? 'Business Client' : 'Individual';
-            }
-
-            if (inputAccountType) {
-                inputAccountType.value = accountType === 'business' ? 'Company / Business Client' : 'Individual / Personal Use';
-            }
-
-            if (accountType === 'business' && companyGroup) {
-                companyGroup.style.display = 'block';
-                if (inputCompany) inputCompany.value = company;
-            }
-
-            if (inputName) inputName.value = name;
-            if (inputEmail) inputEmail.value = email;
-            if (inputPhone) inputPhone.value = phone;
-            if (inputAddress) inputAddress.value = address;
+        if (sidebarAccountBadge) {
+            sidebarAccountBadge.textContent = accountType === 'business' ? 'Business Client' : 'Individual';
         }
+
+        if (inputAccountType) {
+            inputAccountType.value = accountType === 'business' ? 'Company / Business Client' : 'Individual / Personal Use';
+        }
+
+        if (accountType === 'business' && companyGroup) {
+            companyGroup.style.display = 'block';
+            if (inputCompany) inputCompany.value = company;
+        }
+
+        if (inputName) inputName.value = name;
+        if (inputEmail) inputEmail.value = email;
+        if (inputPhone) inputPhone.value = phone;
+        if (inputAddress) inputAddress.value = address;
     }
 
     // -------------------------------------------------------------------------
